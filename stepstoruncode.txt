@@ -1,0 +1,5 @@
+To run this code 
+1) Replace your lib folder with this one inside your flutter application.
+2) Also update pubspec.yaml if needed.(Check commit messages for this).
+3) Also check the assets folder if it is not present then place this in root directory of your flutter application.
+4) Now run your application in android studio by connection any virtual device.
