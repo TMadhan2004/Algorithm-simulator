@@ -1,3 +1,4 @@
+Done by Madhan:
 To run this code 
 1) Replace your lib folder with this one inside your flutter application.
 2) Also update pubspec.yaml if needed.(Check commit messages for this).
@@ -16,3 +17,7 @@ main.dart has been updated(replace them with the old one).
 algorithm_sorting.dart has been updated(replace them with the old one).
 sorting_page.dart,sorting_animation_page.dart have been updated for graph comparisons(replace them with the older ones).
 
+Done by Madhan-2:
+Added titlecard.mov video for loading screen namecard animation.
+pubspec.yaml updated(added dependencies for titlecard.mov video).
+splash_screen.dart code has been updated Replaced old text with video for loading screen).
