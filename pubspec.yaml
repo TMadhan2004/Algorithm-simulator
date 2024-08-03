@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  video_player: ^2.5.1
   google_fonts: ^5.0.0
   cupertino_icons: ^1.0.6
   animated_text_kit: ^4.2.1  # Add this line
@@ -28,6 +29,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/titlecard.mov
     - assets/logo.png
     - assets/sort.png
     - assets/search.png
