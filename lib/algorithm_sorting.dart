@@ -1,7 +1,7 @@
 // algorithm_sorting.dart
 
 import 'package:flutter/material.dart';
-import 'algorithms_descriptions.dart'; // Import the descriptions map
+import 'algorithm_descriptions.dart'; // Import the descriptions map
 
 class AlgorithmSortingPage extends StatelessWidget {
   final String algorithm;
