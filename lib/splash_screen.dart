@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:video_player/video_player.dart';
 import 'home_page.dart';
 
 class FlutterDashImage extends StatelessWidget {
@@ -121,14 +120,49 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  late VideoPlayerController _videoPlayerController;
+  late Future<void> _initializeVideoPlayerFuture;
+
   @override
   void initState() {
     super.initState();
-    _navigateToHome();
+    // Initialize the video player with the .mov file
+    _videoPlayerController = VideoPlayerController.asset(
+      'assets/titlecard.mov', // Ensure this path is correct
+    );
+
+    _initializeVideoPlayerFuture = _videoPlayerController.initialize().then((_) {
+      _videoPlayerController.setLooping(false);
+      _videoPlayerController.play();
+
+      // Listen for the video end and pause on the last frame for 2 more seconds
+      _videoPlayerController.addListener(() {
+        if (_videoPlayerController.value.position >=
+            _videoPlayerController.value.duration &&
+            !_videoPlayerController.value.isPlaying) {
+          // Pause the video when it reaches the end
+          _videoPlayerController.pause();
+          Future.delayed(const Duration(seconds: 2), () {
+            _navigateToHome();
+          });
+        }
+      });
+    }).catchError((error) {
+      // Handle initialization error
+      print('Video initialization error: $error');
+      Future.delayed(const Duration(seconds: 6), () {
+        _navigateToHome();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _videoPlayerController.dispose();
+    super.dispose();
   }
 
   _navigateToHome() async {
-    await Future.delayed(Duration(seconds: 10)); // Set delay to 10 seconds
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => HomePage()),
@@ -140,17 +174,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.blue.withOpacity(0.5), // Blue color for the corners
-              Colors.transparent,
-              Colors.transparent,
-              Colors.blue.withOpacity(0.5), // Blue color for the corners
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            stops: const [0.0, 0.5, 0.5, 1.0],
-          ),
+          color: Colors.white, // Set the background color to white
         ),
         child: Center(
           child: Column(
@@ -158,21 +182,21 @@ class _SplashScreenState extends State<SplashScreen> {
             children: [
               GradientBorderPaint(), // The gradient border with static image inside
               SizedBox(height: 20),
-              Center(
-                child: AnimatedTextKit(
-                  totalRepeatCount: 1,
-                  animatedTexts: [
-                    ScaleAnimatedText(
-                      'Algorithm Simulator',
-                      textStyle: const TextStyle(
-                        fontSize: 28.0,
-                        fontWeight: FontWeight.w200,
-                      ),
-                      duration: Duration(milliseconds: 4000),
-                    ),
-                  ],
-                  isRepeatingAnimation: false,
-                ),
+              FutureBuilder(
+                future: _initializeVideoPlayerFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return AspectRatio(
+                      aspectRatio: _videoPlayerController.value.aspectRatio,
+                      child: VideoPlayer(_videoPlayerController),
+                    );
+                  } else if (snapshot.hasError) {
+                    // Show error message if video fails to load
+                    return Text('Error loading video: ${snapshot.error}');
+                  } else {
+                    return CircularProgressIndicator();
+                  }
+                },
               ),
               SizedBox(height: 20),
             ],
