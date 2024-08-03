@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'algorithm_sorting.dart'; // Import the new page
-import 'algorithm_descriptions.dart'; // Import the descriptions map
-import 'timeline_sorting.dart'; // Import timeline sorting page
+import 'package:syncfusion_flutter_charts/charts.dart'; // Ensure to import this
+import 'algorithm_sorting.dart';
+import 'algorithm_descriptions.dart';
+import 'timeline_sorting.dart';
+import 'comparison_page.dart'; // Import the comparison page
 
 class SortingAnimationPage extends StatefulWidget {
   final List<int> numbers;
@@ -23,6 +25,7 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
   List<String> _steps = [];
   int _currentStep = 0;
   bool _isSorting = false;
+  List<String> _selectedAlgorithms = []; // Track selected algorithms
 
   @override
   void initState() {
@@ -308,6 +311,27 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
     }
   }
 
+  // void _showComparisonPage() {
+  //   if (_selectedAlgorithms.length < 2) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text('Please select at least two algorithms for comparison.'),
+  //       ),
+  //     );
+  //   } else {
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => ComparisonPage(
+  //           selectedAlgorithms: _selectedAlgorithms,
+  //           numbers: widget.numbers,
+  //           speed: widget.speed,
+  //         ),
+  //       ),
+  //     );
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -325,7 +349,7 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
                 ),
               );
             },
-            icon: Icon(Icons.list), // Use Icons.list for Algorithm description
+            icon: Icon(Icons.list),
           ),
           IconButton(
             onPressed: () {
