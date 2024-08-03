@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'sorting_animation_page.dart';  // Ensure this file exists for sorting animations
+import 'package:flutter/services.dart'; // Import this for TextInputFormatter
+import 'sorting_animation_page.dart';
+import 'comparison_page.dart'; // Import the new comparison page
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class SortingPage extends StatefulWidget {
   @override
@@ -9,7 +12,7 @@ class SortingPage extends StatefulWidget {
 class _SortingPageState extends State<SortingPage> with SingleTickerProviderStateMixin {
   final TextEditingController _controller = TextEditingController();
   List<int> _numbers = [];
-  String _algorithm = 'Bubble Sort';
+  Set<String> _selectedAlgorithms = {}; // Use a Set to store selected algorithms
   double _speed = 3000; // Default speed
 
   late AnimationController _animationController;
@@ -17,7 +20,6 @@ class _SortingPageState extends State<SortingPage> with SingleTickerProviderStat
 
   final List<String> _sortingAlgorithms = [
     'Bubble Sort',
-    'Selection Sort',
     'Insertion Sort',
     'Shell Sort',
     'Heap Sort',
@@ -45,6 +47,16 @@ class _SortingPageState extends State<SortingPage> with SingleTickerProviderStat
     super.dispose();
   }
 
+  void _onAlgorithmSelected(bool selected, String algorithm) {
+    setState(() {
+      if (selected) {
+        _selectedAlgorithms.add(algorithm);
+      } else {
+        _selectedAlgorithms.remove(algorithm);
+      }
+    });
+  }
+
   void _generateAndSort() {
     setState(() {
       _numbers = _controller.text.split(',').map((e) => int.tryParse(e.trim()) ?? 0).toList();
@@ -62,7 +74,27 @@ class _SortingPageState extends State<SortingPage> with SingleTickerProviderStat
       MaterialPageRoute(
         builder: (context) => SortingAnimationPage(
           numbers: _numbers,
-          algorithm: _algorithm,
+          algorithm: _selectedAlgorithms.isNotEmpty ? _selectedAlgorithms.first : 'Bubble Sort',
+          speed: _speed,
+        ),
+      ),
+    );
+  }
+
+  void _compareSelectedAlgorithms() {
+    if (_selectedAlgorithms.length < 2) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please select at least 2 sorts to compare.')),
+      );
+      return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ComparisonPage(
+          selectedAlgorithms: _selectedAlgorithms.toList(),
+          numbers: _numbers,
           speed: _speed,
         ),
       ),
@@ -87,41 +119,23 @@ class _SortingPageState extends State<SortingPage> with SingleTickerProviderStat
                   labelText: 'Enter numbers (comma-separated)',
                   border: OutlineInputBorder(),
                 ),
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9,]')),
+                ],
               ),
               SizedBox(height: 16),
               Expanded(
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
-                    childAspectRatio: 3,
-                  ),
+                child: ListView.builder(
                   itemCount: _sortingAlgorithms.length,
                   itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _algorithm = _sortingAlgorithms[index];
-                        });
+                    final algorithm = _sortingAlgorithms[index];
+                    return CheckboxListTile(
+                      title: Text(algorithm),
+                      value: _selectedAlgorithms.contains(algorithm),
+                      onChanged: (selected) {
+                        _onAlgorithmSelected(selected ?? false, algorithm);
                       },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: _algorithm == _sortingAlgorithms[index] ? Colors.blue : Colors.grey[300],
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Center(
-                          child: Text(
-                            _sortingAlgorithms[index],
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: _algorithm == _sortingAlgorithms[index] ? Colors.white : Colors.black,
-                            ),
-                          ),
-                        ),
-                      ),
                     );
                   },
                 ),
@@ -129,6 +143,18 @@ class _SortingPageState extends State<SortingPage> with SingleTickerProviderStat
               ElevatedButton(
                 onPressed: _generateAndSort,
                 child: Text('Sort'),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  textStyle: TextStyle(fontSize: 18),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _compareSelectedAlgorithms,
+                child: Text('Comparison'),
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   textStyle: TextStyle(fontSize: 18),
