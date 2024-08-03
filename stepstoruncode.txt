@@ -4,6 +4,15 @@ To run this code
 3) Also check the assets folder if it is not present then place this in root directory of your flutter application.
 4) Now run your application in android studio by connection any virtual device.
 
+Done by Kavin Malar:
 pubspec.yaml updated 
 splash_screen.dart and home_page.dart pages are cerated
 code changed in main.dart
+
+Done by Kirthick Kumar:
+pubspec.yaml updated(once you replace them, run flutter pub get to install new dependencies). 
+New comparison_page.dart has created for graph comparisons.
+main.dart has been updated(replace them with the old one).
+algorithm_sorting.dart has been updated(replace them with the old one).
+sorting_page.dart,sorting_animation_page.dart have been updated for graph comparisons(replace them with the older ones).
+
