@@ -311,27 +311,6 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
     }
   }
 
-  // void _showComparisonPage() {
-  //   if (_selectedAlgorithms.length < 2) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text('Please select at least two algorithms for comparison.'),
-  //       ),
-  //     );
-  //   } else {
-  //     Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //         builder: (context) => ComparisonPage(
-  //           selectedAlgorithms: _selectedAlgorithms,
-  //           numbers: widget.numbers,
-  //           speed: widget.speed,
-  //         ),
-  //       ),
-  //     );
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
