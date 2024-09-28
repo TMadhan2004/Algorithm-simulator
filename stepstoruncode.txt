@@ -21,3 +21,11 @@ Done by Madhan-2:
 Added titlecard.mov video for loading screen namecard animation.
 pubspec.yaml updated(added dependencies for titlecard.mov video).
 splash_screen.dart code has been updated Replaced old text with video for loading screen).
+
+After cat 1 
+Done by Madhan-3:
+Added loading.mov for animation between screens.
+New UI changes for sorting.
+Fixed slow loading of comparison screen.
+
+
