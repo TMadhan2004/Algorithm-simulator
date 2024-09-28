@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'sorting_page.dart';  // Ensure this file exists for sorting animations
+import 'sorting_page.dart';
+import 'searching_page.dart';  // Ensure this file is properly imported
 
 class HomePage extends StatefulWidget {
   @override
@@ -42,6 +43,13 @@ class _HomePageState extends State<HomePage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => SortingPage(),
+                        ),
+                      );
+                    } else if (actualIndex == 1) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SearchingPage(),
                         ),
                       );
                     } else {
