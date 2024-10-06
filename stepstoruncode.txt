@@ -1,3 +1,10 @@
+Done by Swetha:
+1)Created a sorting simulator 
+2)Created a page for sorting (sorting_page.dart)
+3)Created step by step algorithm description (algorithm_sorting.dart)stored in algorithm_descriptions.dart
+4)Created sorting work page shows each step of sorting(sorting_animation_page.dart)
+5)Created comparison page as a graph(comparison_page.dart)
+6)Created timeline for each sort(timeline_sorting.dart)
 Done by Madhan:
 To run this code 
 1) Replace your lib folder with this one inside your flutter application.
@@ -28,4 +35,8 @@ Added loading.mov for animation between screens.
 New UI changes for sorting.
 Fixed slow loading of comparison screen.
 
+Done by Swetha-2:
+1)Created searching_page.dart
+2)Created page which shows technique for searching(searching_animation_page.dart)
+3)Created algorithm description page (searching_algorithm_description.dart)
 
