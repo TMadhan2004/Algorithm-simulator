@@ -1,3 +1,11 @@
+Done by Swetha:
+1)Created sorting_page.dart
+2)Created sorting_animation_page.dart (shows each step of sort)
+3)Created algorithm_descriptions.dart(contains description of each sort)
+4)Created algorithm_sorting.dart(shows algorithm description for selected sort)
+5)Created timeline_sorting.dart(shows visualization of each sort)
+6)sorting_animation_page.dart have been updatedfor timeline and algorithm descriptiom
+
 Done by Madhan:
 To run this code 
 1) Replace your lib folder with this one inside your flutter application.
@@ -7,7 +15,7 @@ To run this code
 
 Done by Kavin Malar:
 pubspec.yaml updated 
-splash_screen.dart and home_page.dart pages are cerated
+splash_screen.dart and home_page.dart pages are created
 code changed in main.dart
 
 Done by Kirthick Kumar:
@@ -27,5 +35,12 @@ Done by Madhan-3:
 Added loading.mov for animation between screens.
 New UI changes for sorting.
 Fixed slow loading of comparison screen.
+
+Done by Swetha-2:
+1)Created searching_page.dart
+2)Created searching_animation_page.dart(shows searching technique)
+3)Created searching_algorithm_description.dart(shows algorithm description for selected searching technique)
+4)Created comparison_searching.dart(shows comparison graph for selected search)
+5)Updated searchin_animation_page.dart for algorithm description
 
 
