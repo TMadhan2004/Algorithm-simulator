@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'sorting_page.dart';
-import 'searching_page.dart';  // Ensure this file is properly imported
+import 'searching_page.dart';
+import 'graph/graph_algorithm_selection_page.dart';  
 
 class HomePage extends StatefulWidget {
   @override
@@ -8,7 +9,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  PageController _controller = PageController(initialPage: 1000); // Arbitrary high initial page for cyclic scrolling
+  PageController _controller = PageController(initialPage: 1000);
   int _currentPage = 1000;
 
   final List<Map<String, String>> _pages = [
@@ -35,25 +36,24 @@ class _HomePageState extends State<HomePage> {
                 });
               },
               itemBuilder: (context, index) {
-                int actualIndex = index % _pages.length; // Enable cyclic scrolling
+                int actualIndex = index % _pages.length;
                 return GestureDetector(
                   onTap: () {
                     if (actualIndex == 0) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => SortingPage(),
-                        ),
+                        MaterialPageRoute(builder: (context) => SortingPage()),
                       );
                     } else if (actualIndex == 1) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => SearchingPage(),
-                        ),
+                        MaterialPageRoute(builder: (context) => SearchingPage()),
                       );
-                    } else {
-                      // Handle navigation for other pages
+                    } else if (actualIndex == 2) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => GraphAlgorithmSelectionPage()),
+                      );
                     }
                   },
                   child: Center(
