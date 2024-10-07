@@ -31,5 +31,5 @@ Fixed slow loading of comparison screen.
 Done by Madhan-4:
 Added all codes for graph algorithms.
 4 graph algorithms added prim's, kruskal's, dijkstra, bellmanford.
-To run this just place the graph folder inside your lib
+To run this just place the graph folder inside your lib also changed home_page.dart for graph algorithms navigation.
 
