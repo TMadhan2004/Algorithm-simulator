@@ -33,3 +33,7 @@ Added all codes for graph algorithms.
 4 graph algorithms added prim's, kruskal's, dijkstra, bellmanford.
 To run this just place the graph folder inside your lib also changed home_page.dart for graph algorithms navigation.
 
+Done by Kavin Malar :
+enhanced sorting animation with code and description
+grouped sorting algorithms into one folder
+import changes in main.dart and home.dart
