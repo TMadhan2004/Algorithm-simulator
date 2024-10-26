@@ -37,3 +37,10 @@ Done by Kavin Malar :
 enhanced sorting animation with code and description
 grouped sorting algorithms into one folder
 import changes in main.dart and home.dart
+
+
+Done by Kirthick Kumar:
+Added a new page for searching that contains the programming codes along with its time complexity
+Modified the overall UI design for searching
+Integrated timeline into animation page
+Modified the comparison logics in graphs and it will display the final efficient algorithm among the selected ones for better understanding... 
