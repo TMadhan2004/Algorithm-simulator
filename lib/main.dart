@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'sorting_page.dart';  // Ensure this file exists for sorting animations
-import 'comparison_page.dart';// Import the new comparison page
+import 'sorting/sorting_page.dart';  // Ensure this file exists for sorting animations
+import 'sorting/comparison_page.dart';// Import the new comparison page
 import 'splash_screen.dart';  // Import the splash screen
 import 'home_page.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
