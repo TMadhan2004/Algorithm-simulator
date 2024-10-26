@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'sorting_page.dart';
+import 'sorting/sorting_page.dart';
 import 'searching_page.dart';
 import 'graph/graph_algorithm_selection_page.dart';  
 
