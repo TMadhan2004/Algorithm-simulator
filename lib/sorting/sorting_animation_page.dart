@@ -565,6 +565,8 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.algorithm} Animation'),
+        backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
         actions: [
           IconButton(
             onPressed: () {
@@ -577,7 +579,7 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
                 ),
               );
             },
-            icon: Icon(Icons.list),
+            icon: Icon(Icons.info_outline),
           ),
           IconButton(
             onPressed: () {
@@ -729,6 +731,8 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
               child: Text('Sort Again'),
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                backgroundColor: Colors.purple,
+                foregroundColor: Colors.white,
               ),
             ),
             SizedBox(height: 16),
