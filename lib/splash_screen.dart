@@ -11,7 +11,7 @@ class FlutterDashImage extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       decoration: const ShapeDecoration(shape: CircleBorder()),
       child: Image.asset(
-        'assets/logo.png', // Replace with your splash screen image
+        'assets/logo.jpeg', // Replace with your splash screen image
         height: 100,
         width: 100,
         fit: BoxFit.cover,
