@@ -114,6 +114,7 @@ class _ComparisonPageState extends State<ComparisonPage> {
       appBar: AppBar(
         title: Text('Search Algorithm Comparison'),
         backgroundColor: Colors.purple, // Purple AppBar
+        foregroundColor: Colors.white,
       ),
       body: Center(
         child: _searchResults.isEmpty
