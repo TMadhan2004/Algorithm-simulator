@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'algorithm_sorting.dart';
+import 'algorithm_descriptions.dart';
 import 'sorting_codes.dart';
 
 class SortingAnimationPage extends StatefulWidget {
@@ -53,7 +53,6 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
       _currentDescription = '';
       _steps.clear();
       // _mergeSteps = '';
-
     });
     WidgetsBinding.instance.addPostFrameCallback((_) => _sort());
   }
@@ -106,8 +105,7 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
           setState(() {
             _highlightIndex = j; // Highlight bars being swapped
           });
-          await Future.delayed(
-              Duration(seconds: 4));
+          await Future.delayed(Duration(seconds: 4));
 
           setState(() {
             _currentStep = _steps.length - 1; // Update the current step
@@ -120,8 +118,7 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
           swapped = true;
 
           _steps.add(
-              'Swapped ${_numbers[j]} and ${_numbers[j + 1]} -> ${_numbers
-                  .toString()}');
+              'Swapped ${_numbers[j]} and ${_numbers[j + 1]} -> ${_numbers.toString()}');
 
           setState(() {
             _currentDescription = _steps.last; // Display the last step
@@ -162,13 +159,14 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
       }
 
       // Swap
-      if (minIdx != i) { // Only swap if needed
+      if (minIdx != i) {
+        // Only swap if needed
         int temp = _numbers[i];
         _numbers[i] = _numbers[minIdx];
         _numbers[minIdx] = temp;
 
-        _steps.add('Swapped ${_numbers[i]} and ${_numbers[minIdx]} -> ${_numbers
-            .toString()}');
+        _steps.add(
+            'Swapped ${_numbers[i]} and ${_numbers[minIdx]} -> ${_numbers.toString()}');
 
         // Increment swap count
         setState(() {
@@ -204,8 +202,8 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
       // Shift elements larger than the key
       while (j >= 0 && arr[j] > key) {
         arr[j + 1] = arr[j];
-        _steps.add(
-            'Shifted ${arr[j]} to position ${j + 2} -> ${arr.toString()}');
+        _steps
+            .add('Shifted ${arr[j]} to position ${j + 2} -> ${arr.toString()}');
 
         setState(() {
           _currentDescription = _steps.last;
@@ -243,8 +241,8 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
         // Perform gapped insertion sort
         while (j >= gap && arr[j - gap] > temp) {
           arr[j] = arr[j - gap];
-          _steps.add('Shifted ${arr[j - gap]} to position ${j + 1} -> ${arr
-              .toString()}');
+          _steps.add(
+              'Shifted ${arr[j - gap]} to position ${j + 1} -> ${arr.toString()}');
 
           setState(() {
             _currentDescription = _steps.last;
@@ -304,8 +302,7 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
 
           // Log the swap action
           _steps.add(
-              'Swapped ${_numbers[i]} with ${_numbers[largest]} -> ${_numbers
-                  .toString()}');
+              'Swapped ${_numbers[i]} with ${_numbers[largest]} -> ${_numbers.toString()}');
           _currentDescription = _steps.last; // Display the last step
           _swapCount++; // Increment swap count
           _highlightIndex = largest; // Highlight the swapped node
@@ -421,7 +418,8 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
     List<int> rightArr = array.sublist(mid + 1, right + 1);
 
     int i = 0, j = 0, k = left;
-    _steps.add('Merging left: ${leftArr.toString()} and right: ${rightArr.toString()}');
+    _steps.add(
+        'Merging left: ${leftArr.toString()} and right: ${rightArr.toString()}');
     setState(() {
       _currentDescription = _steps.last; // Display the merging step
     });
@@ -431,9 +429,12 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
     while (i < leftArr.length && j < rightArr.length) {
       setState(() {
         // Highlight the current elements being compared
-        _highlightIndex = (i < leftArr.length) ? left + i : mid + 1 + j; // Highlight the correct index
+        _highlightIndex = (i < leftArr.length)
+            ? left + i
+            : mid + 1 + j; // Highlight the correct index
       });
-      await Future.delayed(Duration(seconds: 4)); // Allow time to see the highlight
+      await Future.delayed(
+          Duration(seconds: 4)); // Allow time to see the highlight
 
       if (leftArr[i] <= rightArr[j]) {
         array[k++] = leftArr[i++];
@@ -446,7 +447,8 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
       // Update the numbers and description after each decision
       setState(() {
         _numbers = List.from(array);
-        _currentDescription = _steps.last; // Update current description with the last step
+        _currentDescription =
+            _steps.last; // Update current description with the last step
         _swapCount++; // Increment swap count on each merge step
       });
       await Future.delayed(Duration(seconds: 4)); // Show each swap
@@ -514,8 +516,8 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
         swapCount++;
 
         // Log the swap step
-        _steps.add(
-            'Swapped ${array[i]} and ${array[j]} -> ${array.toString()}');
+        _steps
+            .add('Swapped ${array[i]} and ${array[j]} -> ${array.toString()}');
         setState(() {
           _currentDescription = _steps.last;
           _currentStep = _steps.length - 1;
@@ -529,9 +531,8 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
     _swap(array, i + 1, high);
     swapCount++;
 
-    _steps.add('Step ${_steps.length +
-        1}: After partitioning with pivot $pivot, array is -> ${array
-        .toString()}');
+    _steps.add(
+        'Step ${_steps.length + 1}: After partitioning with pivot $pivot, array is -> ${array.toString()}');
     setState(() {
       _currentDescription = _steps.last;
       _currentStep = _steps.length - 1;
@@ -559,7 +560,8 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
 
   @override
   Widget build(BuildContext context) {
-    final int maxNumber = _numbers.isNotEmpty ? _numbers.reduce((a, b) => a > b ? a : b) : 1;
+    final int maxNumber =
+        _numbers.isNotEmpty ? _numbers.reduce((a, b) => a > b ? a : b) : 1;
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.algorithm} Animation'),
@@ -569,10 +571,9 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      AlgorithmSortingPage(
-                        algorithm: widget.algorithm,
-                      ),
+                  builder: (context) => AlgorithmSortingPage(
+                    algorithm: widget.algorithm,
+                  ),
                 ),
               );
             },
@@ -581,13 +582,12 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
           IconButton(
             onPressed: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                  builder: (context) =>
-                  AlgorithmAnimationPage(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AlgorithmAnimationPage(
                     algorithm: widget.algorithm,
                   ),
-              ),
+                ),
               );
             },
             icon: Icon(Icons.code),
@@ -606,101 +606,122 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
             Expanded(
               child: _isSorting
                   ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Sorting with ${widget.algorithm}'),
-                  SizedBox(height: 16),
-                  Center(
-                    child: Container(
-                      width: _numbers.length * 40.0, // Adjust width based on number of bars
-                      height: MediaQuery.of(context).size.height * 0.4,
-                      child: Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: List.generate(_numbers.length, (index) {
-                          return AnimatedPositioned(
-                            duration: Duration(seconds: 30), // Adjust for smoother animations
-                            left: index * 40.0, // Space each bar horizontally
-                            bottom: 0, // Align bars to the bottom of the Stack
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Container(
-                                  width: 30,
-                                  // height: _numbers[index] * 10.0, // Scale the height of each bar
-                                  height: (maxNumber > 0 ? _numbers[index] / maxNumber * 200 : 0),
-                                  color: index == _pivotIndex
-                                      ? Colors.orange // Pivot element in orange
-                                      : index == _highlightIndex
-                                      ? Colors.red // Highlighted element in red
-                                      : (index <= _sortedUntil ? Colors.green : Colors.blue),
-                                  child: Center(
-                                    child: Text(
-                                      '${_numbers[index]}',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Sorting with ${widget.algorithm}'),
+                        SizedBox(height: 16),
+                        Center(
+                          child: Container(
+                            width: _numbers.length *
+                                40.0, // Adjust width based on number of bars
+                            height: MediaQuery.of(context).size.height * 0.4,
+                            child: Stack(
+                              alignment: Alignment.bottomCenter,
+                              children: List.generate(_numbers.length, (index) {
+                                return AnimatedPositioned(
+                                  duration: Duration(
+                                      seconds:
+                                          30), // Adjust for smoother animations
+                                  left: index *
+                                      40.0, // Space each bar horizontally
+                                  bottom:
+                                      0, // Align bars to the bottom of the Stack
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Container(
+                                        width: 30,
+                                        // height: _numbers[index] * 10.0, // Scale the height of each bar
+                                        height: (maxNumber > 0
+                                            ? _numbers[index] / maxNumber * 200
+                                            : 0),
+                                        color: index == _pivotIndex
+                                            ? Colors
+                                                .orange // Pivot element in orange
+                                            : index == _highlightIndex
+                                                ? Colors
+                                                    .red // Highlighted element in red
+                                                : (index <= _sortedUntil
+                                                    ? Colors.green
+                                                    : Colors.blue),
+                                        child: Center(
+                                          child: Text(
+                                            '${_numbers[index]}',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ),
-                              ],
+                                );
+                              }),
                             ),
-                          );
-                        }),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  Text('Swaps: $_swapCount'),
-                ],
-              )
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        Text('Swaps: $_swapCount'),
+                      ],
+                    )
                   : _isCompleted
-                  ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Sorting Complete!'),
-                  SizedBox(height: 16),
-                  Center(
-                    child: Container(
-                      width: _numbers.length * 40.0,
-                      height: MediaQuery.of(context).size.height * 0.4,
-                      child: Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: List.generate(_numbers.length, (index) {
-                          return AnimatedPositioned(
-                            duration: Duration(milliseconds: 300), // Adjust for smoother animations
-                            left: index * 40.0,
-                            bottom: 0,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Container(
-                                  width: 30,
-                                  // height: _numbers[index] * 10.0,
-                                  height: (maxNumber > 0 ? _numbers[index] / maxNumber * 200 : 0),
-                                  color: Colors.green, // Final sorted order color
-                                  child: Center(
-                                    child: Text(
-                                      '${_numbers[index]}',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Sorting Complete!'),
+                            SizedBox(height: 16),
+                            Center(
+                              child: Container(
+                                width: _numbers.length * 40.0,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.4,
+                                child: Stack(
+                                  alignment: Alignment.bottomCenter,
+                                  children:
+                                      List.generate(_numbers.length, (index) {
+                                    return AnimatedPositioned(
+                                      duration: Duration(
+                                          milliseconds:
+                                              300), // Adjust for smoother animations
+                                      left: index * 40.0,
+                                      bottom: 0,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Container(
+                                            width: 30,
+                                            // height: _numbers[index] * 10.0,
+                                            height: (maxNumber > 0
+                                                ? _numbers[index] /
+                                                    maxNumber *
+                                                    200
+                                                : 0),
+                                            color: Colors
+                                                .green, // Final sorted order color
+                                            child: Center(
+                                              child: Text(
+                                                '${_numbers[index]}',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                  ),
+                                    );
+                                  }),
                                 ),
-                              ],
+                              ),
                             ),
-                          );
-                        }),
-                      ),
-                    ),
-                  ),
-                ],
-              )
-                  : Text('Sorting Complete!'),
+                          ],
+                        )
+                      : Text('Sorting Complete!'),
             ),
             SizedBox(height: 16), // Spacer before button
             ElevatedButton(
