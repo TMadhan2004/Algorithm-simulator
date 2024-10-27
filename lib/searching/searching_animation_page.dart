@@ -159,6 +159,7 @@ class _SearchingAnimationPageState extends State<SearchingAnimationPage>
       appBar: AppBar(
         title: Text('${widget.algorithm} Animation'),
         backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
         actions: [
           IconButton(
             onPressed: () {
@@ -171,7 +172,7 @@ class _SearchingAnimationPageState extends State<SearchingAnimationPage>
                 ),
               );
             },
-            icon: Icon(Icons.list),
+            icon: Icon(Icons.info_outline),
           ),
           IconButton(
             onPressed: () {
