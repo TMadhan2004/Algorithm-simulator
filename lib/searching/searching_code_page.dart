@@ -164,6 +164,40 @@ class _AlgorithmCodePageState extends State<AlgorithmCodePage> {
     String code = codeSnippets[widget.algorithm]?[_selectedLanguage] ??
         'Code not available';
 
+    // Time complexities and explanations for different algorithms
+    Map<String, Map<String, String>> timeComplexities = {
+      'Linear Search': {
+        'Best': 'O(1)',
+        'Average': 'O(n)',
+        'Worst': 'O(n)',
+        'Description': 'Best-case: The element is found at the first index. '
+            'Worst-case: The element is found at the last index or is not present in the array.',
+      },
+      'Binary Search': {
+        'Best': 'O(1)',
+        'Average': 'O(log n)',
+        'Worst': 'O(log n)',
+        'Description': 'Best-case: The element is found at the middle index. '
+            'Worst-case: The target element is either the first element, the last element, or not present.',
+      },
+      'Hashing': {
+        'Best': 'O(1)',
+        'Average': 'O(1)',
+        'Worst': 'O(n)',
+        'Description':
+            'Hashing uses a hash function to map data to fixed-size values for indexing. '
+                'It is efficient for data access.',
+      },
+    };
+
+    var complexities = timeComplexities[widget.algorithm] ??
+        {
+          'Best': 'N/A',
+          'Average': 'N/A',
+          'Worst': 'N/A',
+          'Description': 'N/A',
+        };
+
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.algorithm} Code'),
@@ -179,30 +213,50 @@ class _AlgorithmCodePageState extends State<AlgorithmCodePage> {
               children: [
                 // Language Dropdown
                 DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    value: _selectedLanguage,
-                    dropdownColor: Colors.purple[100],
-                    iconEnabledColor: Colors.purple,
-                    items:
-                        ['C', 'C++', 'Java', 'Python'].map((String language) {
-                      return DropdownMenuItem<String>(
-                        value: language,
-                        child: Text(
-                          language,
-                          style: TextStyle(color: Colors.purple),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (String? newLanguage) {
-                      setState(() {
-                        _selectedLanguage = newLanguage!;
-                      });
-                    },
+                  child: InkWell(
+                    splashColor: Colors.transparent, // Remove splash color
+                    highlightColor:
+                        Colors.transparent, // Remove highlight color
+                    child: DropdownButton<String>(
+                      value: _selectedLanguage,
+                      dropdownColor:
+                          Colors.purple[100], // Set dropdown background color
+                      iconEnabledColor:
+                          Colors.purple, // Change icon color to purple
+                      items:
+                          ['C', 'C++', 'Java', 'Python'].map((String language) {
+                        return DropdownMenuItem<String>(
+                          value: language,
+                          child: Text(
+                            language,
+                            style: TextStyle(
+                                color: Colors.purple), // Set text color
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? newLanguage) {
+                        setState(() {
+                          _selectedLanguage = newLanguage!;
+                        });
+                      },
+                      selectedItemBuilder: (BuildContext context) {
+                        return ['C', 'C++', 'Java', 'Python']
+                            .map<Widget>((String value) {
+                          return Text(
+                            value,
+                            style: TextStyle(
+                                color:
+                                    Colors.purple), // Set selected text color
+                          );
+                        }).toList();
+                      },
+                    ),
                   ),
                 ),
                 // Theme Toggle Button
                 IconButton(
-                  icon: Icon(Icons.brightness_6, color: Colors.purple),
+                  icon: Icon(Icons.brightness_6,
+                      color: Colors.purple), // Set icon color to purple
                   onPressed: () {
                     setState(() {
                       _isDarkTheme = !_isDarkTheme;
@@ -211,12 +265,36 @@ class _AlgorithmCodePageState extends State<AlgorithmCodePage> {
                 ),
                 // Copy to Clipboard Button
                 IconButton(
-                  icon: Icon(Icons.copy, color: Colors.purple),
+                  icon: Icon(Icons.copy,
+                      color: Colors.purple), // Set icon color to purple
                   onPressed: () async {
                     if (await Clipboard.setData(ClipboardData(text: code))
                         .then((_) => true)) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('Code copied to clipboard')),
+                      );
+                    } else {
+                      // Web workaround
+                      final controller = TextEditingController(text: code);
+                      await showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text("Copy Code"),
+                          content: TextField(
+                            controller: controller,
+                            readOnly: true,
+                            decoration: InputDecoration(
+                              hintText:
+                                  "Copy manually if clipboard is restricted.",
+                            ),
+                          ),
+                          actions: [
+                            TextButton(
+                              child: Text("Close"),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                          ],
+                        ),
                       );
                     }
                   },
@@ -229,24 +307,101 @@ class _AlgorithmCodePageState extends State<AlgorithmCodePage> {
             child: Container(
               padding: const EdgeInsets.all(16.0),
               color: _isDarkTheme ? Colors.black87 : Colors.white,
+              // Set a fixed height and width for the code container
+              constraints: BoxConstraints(
+                maxWidth: 400, // Fixed width of the code window
+                maxHeight: 300, // Fixed height of the code window
+              ),
               child: Scrollbar(
-                thumbVisibility: true,
+                thumbVisibility: true, // Always show the scrollbar thumbs
                 child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
+                  scrollDirection: Axis.vertical, // Vertical scrolling
                   child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: SelectableText(
-                      code,
-                      style: TextStyle(
-                        color: _isDarkTheme ? Colors.white : Colors.black,
-                        fontFamily: 'monospace',
-                        fontSize: 14,
+                    scrollDirection:
+                        Axis.horizontal, // Horizontal scrolling for long lines
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: 400, // Match the width of the window
+                        minHeight: 300, // Match the height of the window
                       ),
-                      textAlign: TextAlign.left,
+                      child: SelectableText(
+                        code,
+                        style: TextStyle(
+                          color: _isDarkTheme ? Colors.white : Colors.black,
+                          fontFamily: 'monospace',
+                          fontSize: 14,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
                     ),
                   ),
                 ),
               ),
+            ),
+          ),
+
+          // Time Complexity Table
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Time Complexity',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.purple,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Table(
+                  border: TableBorder.all(color: Colors.purple),
+                  children: [
+                    TableRow(children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Best',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Average',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Worst',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                      ),
+                    ]),
+                    TableRow(children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(complexities['Best']!),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(complexities['Average']!),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(complexities['Worst']!),
+                      ),
+                    ]),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Description:',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.purple,
+                  ),
+                ),
+                SizedBox(height: 5),
+                Text(complexities['Description']!),
+              ],
             ),
           ),
         ],
