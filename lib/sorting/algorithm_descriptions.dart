@@ -1,9 +1,11 @@
 // algorithm_descriptions.dart
+
 import 'package:flutter/material.dart';
 
+// Map containing descriptions for each algorithm
 const Map<String, String> algorithmDescriptions = {
   'Bubble Sort': '\n'
-      'Bubble Sort is the simplest sorting algorithm that works by repeatedly swapping the adjacent elements if they are in the wrong order. This algorithm is not suitable for large data sets as its average and worst-case time complexity are quite high..\n\n'
+      'Bubble Sort is the simplest sorting algorithm that works by repeatedly swapping the adjacent elements if they are in the wrong order. This algorithm is not suitable for large data sets as its average and worst-case time complexity are quite high.\n\n'
       'Steps: \n'
       '1. Start at the beginning of the array.\n'
       '2. Compare the current element with the next element.\n'
@@ -21,7 +23,7 @@ const Map<String, String> algorithmDescriptions = {
       '4. Repeat the process for all elements.\n\n'
       'Time Complexity : O(n^2)',
   'Insertion Sort': '\n'
-      'Insertion sort is a simple sorting algorithm that works by iteratively inserting each element of an unsorted list into its correct position in a sorted portion of the list. \n\n'
+      'Insertion sort is a simple sorting algorithm that works by iteratively inserting each element of an unsorted list into its correct position in a sorted portion of the list.\n\n'
       'Steps: \n'
       '1. Assume the first element is already sorted.\n'
       '2. Pick the next element and compare it with elements in the sorted portion.\n'
@@ -33,47 +35,70 @@ const Map<String, String> algorithmDescriptions = {
       'Average case: O(n^2)\n'
       'Worst case: O(n^2)',
   'Radix Sort': '\n'
-      'Radix Sort is a linear sorting algorithm that sorts elements by processing them digit by digit. It is an efficient sorting algorithm for integers or strings with fixed-size keys. \n\n'
+      'Radix Sort is a linear sorting algorithm that sorts elements by processing them digit by digit. It is efficient for integers or strings with fixed-size keys.\n\n'
       'Steps: \n'
       '1. Find the Maximum Number to determine the number of digits.\n'
       '2. Sort by the Least Significant Digit (LSD) using a stable sorting algorithm.\n'
-      '3. Sort by the Second Digit (10s place) using the same stable sorting algorithm.\n'
-      '4. Sort by the Most Significant Digit (MSD) using the stable sorting algorithm.\n'
-      '5. Repeat the sorting process for all digits until the most significant digit is sorted.\n'
-      '6. Result: The array is now sorted.\n\n'
+      '3. Sort by the next digit and repeat.\n'
+      '4. Continue until all digits are processed.\n\n'
       'Time Complexity : O(d*(n+b))',
   'Shell Sort': '\n'
-      'Shell sort is mainly a variation of Insertion Sort. In insertion sort, we move elements only one position ahead. When an element has to be moved far ahead, many movements are involved. The idea of ShellSort is to allow the exchange of far items. In Shell sort, we make the array h-sorted for a large value of h. We keep reducing the value of h until it becomes 1. An array is said to be h-sorted if all sublists of every h’th element are sorted.\n\n'
+      'Shell sort is a variation of Insertion Sort that allows for the exchange of far items. It divides the array into subarrays and reduces the gap with each iteration.\n\n'
       'Steps: \n'
-      '1. Divide the array into subarrays using a gap (e.g., half the length of the array).\n'
-      '2. Sort the elements in each subarray using insertion sort.\n'
-      '3. Reduce the gap and repeat.\n'
-      '4. Continue until the gap is 1, performing a final insertion sort.\n\n'
+      '1. Divide the array into subarrays using a gap.\n'
+      '2. Sort each subarray using insertion sort.\n'
+      '3. Reduce the gap and repeat until the gap is 1.\n\n'
       'Time Complexity : O(n^{1.25})',
   'Quick Sort': '\n'
-      'QuickSort is a sorting algorithm based on the Divide and Conquer that picks an element as a pivot and partitions the given array around the picked pivot by placing the pivot in its correct position in the sorted array.\n\n'
+      'QuickSort is based on Divide and Conquer, picking a pivot and partitioning the array around it.\n\n'
       'Steps: \n'
       '1. Select a pivot element.\n'
-      '2. Rearrange elements so that smaller elements are to the left and larger ones to the right.\n'
-      '3. Recursively apply the same logic to the left and right subarrays.\n'
-      '4. Continue until all elements are sorted.\n\n'
+      '2. Rearrange elements to place smaller elements left and larger right.\n'
+      '3. Recursively apply to left and right subarrays.\n\n'
       'Time Complexity : \n'
-      'Best case : Ω(n log n)\n'
-      'Average case : ϴ(n log n)\n'
-      'Worst case : O(n^2)',
+      'Best case: Ω(n log n)\n'
+      'Average case: ϴ(n log n)\n'
+      'Worst case: O(n^2)',
   'Heap Sort': '\n'
-      'Heap sort is a comparison-based sorting technique based on Binary Heap Data Structure. It can be seen as an optimization over selection sort where we first find the max (or min) element and swap it with the last (or first).\n\n'
+      'Heap sort uses a Binary Heap structure to sort by first building a max-heap.\n\n'
       'Steps: \n'
       '1. Build a max-heap from the input array.\n'
-      '2. Swap the root (largest element) with the last element.\n'
-      '3. Reduce the heap size and heapify the root.\n'
-      '4. Repeat until all elements are sorted.\n\n'
+      '2. Swap the root with the last element.\n'
+      '3. Reduce heap size and heapify the root.\n\n'
       'Time Complexity : O(n log n)',
   'Merge Sort': '\n'
-      'Merge sort is a sorting algorithm that follows the divide-and-conquer approach. It works by recursively dividing the input array into smaller subarrays and sorting those subarrays then merging them back together to obtain the sorted array.\n\n'
+      'Merge sort divides the input array, sorts subarrays, and merges them back together.\n\n'
       'Steps: \n'
-      '1. Divide the array into two halves.\n'
-      '2. Recursively divide the halves until each piece is of size 1.\n'
-      '3. Merge the sorted halves to form a sorted array.\n\n'
+      '1. Divide the array into halves.\n'
+      '2. Recursively divide until size 1.\n'
+      '3. Merge sorted halves.\n\n'
       'Time Complexity : O(n log n)',
 };
+
+// Widget to display the description of a selected sorting algorithm
+class AlgorithmSortingPage extends StatelessWidget {
+  final String algorithm;
+
+  AlgorithmSortingPage({
+    required this.algorithm,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    String description =
+        algorithmDescriptions[algorithm] ?? 'No description available';
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('$algorithm Algorithm Description'),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Text(
+          description,
+          style: TextStyle(fontSize: 18.0),
+        ),
+      ),
+    );
+  }
+}
