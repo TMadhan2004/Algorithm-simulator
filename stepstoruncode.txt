@@ -44,3 +44,6 @@ Added a new page for searching that contains the programming codes along with it
 Modified the overall UI design for searching
 Integrated timeline into animation page
 Modified the comparison logics in graphs and it will display the final efficient algorithm among the selected ones for better understanding... 
+
+Done by Kavin Malar : 
+updated sorting_codes.dart for C, C++, Python
