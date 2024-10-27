@@ -270,13 +270,6 @@ class _SearchingAnimationPageState extends State<SearchingAnimationPage>
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        child: Icon(Icons.arrow_back),
-        backgroundColor: Colors.purple,
-      ),
     );
   }
 }
