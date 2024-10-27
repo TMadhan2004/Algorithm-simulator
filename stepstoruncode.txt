@@ -69,3 +69,8 @@ Design
 1)updated sorting_page.dart
 2)updated sorting_animation_page.dart
 3)updated algorithm descriptions.dart with description and time complexity
+
+Done by Madhan-5:
+A complete revamp has been done to graph algorithms
+Icons added 
+removed flutter logo loading 
