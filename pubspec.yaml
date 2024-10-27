@@ -24,6 +24,12 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^3.0.0
   test: 1.25.2
+  flutter_launcher_icons: "^0.13.1"
+
+flutter_launcher_icons:
+      android: "launcher_icon"
+      ios: true
+      image_path: "assets/icon.png"
 
 flutter:
   uses-material-design: true
@@ -35,3 +41,7 @@ flutter:
     - assets/search.png
     - assets/graph.png
     - assets/loading.mov
+    - assets/krusalgo.mp4
+    - assets/primalgo.mp4
+    - assets/dijkstraalgo.mp4
+    - assets/bellmanfordalgo.mp4
