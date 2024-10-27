@@ -1,3 +1,9 @@
+Done by Swetha:
+1)created sorting_page.dart(to give input and select sort )
+2)created sorting_animation_page.dart(to show the sorting process visually)
+3)created algorithm_descriptions.dart(to show explanation of step by step swapping)
+4)created sorting_codes.dart(to show code for that selected sort)
+
 Done by Madhan:
 To run this code 
 1) Replace your lib folder with this one inside your flutter application.
@@ -28,6 +34,11 @@ Added loading.mov for animation between screens.
 New UI changes for sorting.
 Fixed slow loading of comparison screen.
 
+Done by Swetha:
+1)created searching_page.dart(to make user to find the searching of a number with linear search,binary search,hashing)
+2)created searching_animation_page.dart(to show the visual searching steps)
+3)created searching_algorithm_descriptions.dart(to show the step by step explanation of that particular search technique)
+
 Done by Madhan-4:
 Added all codes for graph algorithms.
 4 graph algorithms added prim's, kruskal's, dijkstra, bellmanford.
@@ -45,5 +56,16 @@ Modified the overall UI design for searching
 Integrated timeline into animation page
 Modified the comparison logics in graphs and it will display the final efficient algorithm among the selected ones for better understanding... 
 
+Done by Swetha:
+Design
+1)updated searching_algorithm_descriptions.dart
+2)updated searching_code_page.dart
+
 Done by Kavin Malar : 
 updated sorting_codes.dart for C, C++, Python
+
+Done by Swetha:
+Design
+1)updated sorting_page.dart
+2)updated sorting_animation_page.dart
+3)updated algorithm descriptions.dart with description and time complexity
