@@ -107,6 +107,7 @@ class _SearchingPageState extends State<SearchingPage> {
       appBar: AppBar(
         title: Text('Searching Algorithms'),
         backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
