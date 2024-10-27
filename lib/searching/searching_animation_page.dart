@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'searching_algorithm_description.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 import 'searching_code_page.dart';
 
 class SearchingAnimationPage extends StatefulWidget {
