@@ -738,3 +738,4 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
     );
   }
 }
+//imported algorithm descriptions page instead of algorithm sorting page
