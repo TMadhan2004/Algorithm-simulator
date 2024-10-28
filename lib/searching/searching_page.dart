@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'searching_animation_page.dart';
-import 'comparsion_page.dart';
+import 'comparison_page.dart';
 
 class SearchingPage extends StatefulWidget {
   @override
@@ -19,6 +19,33 @@ class _SearchingPageState extends State<SearchingPage> {
     'Binary Search',
     'Hashing'
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    // Show the disclaimer dialog when the page is first initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showDisclaimerDialog());
+  }
+
+  void _showDisclaimerDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Disclaimer'),
+        content: Text(
+          'Only 8 numbers are allowed. '
+              'Integers can be entered as input. '
+              'Please ensure you follow these restrictions while entering inputs.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
 
   // Parse input for numbers
   void _parseInput() {
@@ -258,9 +285,9 @@ class _LoadingDialogState extends State<LoadingDialog> {
         child: Center(
           child: _controller.value.isInitialized
               ? AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
-                )
+            aspectRatio: _controller.value.aspectRatio,
+            child: VideoPlayer(_controller),
+          )
               : CircularProgressIndicator(),
         ),
       ),
