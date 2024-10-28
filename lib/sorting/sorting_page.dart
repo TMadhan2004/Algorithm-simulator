@@ -39,7 +39,8 @@ class _SortingPageState extends State<SortingPage> {
         title: Text('Disclaimer'),
         content: Text(
           'Only 9 numbers are allowed '
-              'Only positive numbers can be entered (excluding 0). '
+              'Integers can be given as input. '
+              'For radix sort with neagtive numbers negative and positive inputs are treated seperately.'
               'Please ensure you follow these restrictions while entering inputs.',
         ),
         actions: [
@@ -56,13 +57,12 @@ class _SortingPageState extends State<SortingPage> {
   bool _parseInput() {
     String input = _numbersController.text;
 
-    // Regular expression to check for only numbers and commas
-    final RegExp validInputPattern = RegExp(r'^(\d+\s*,\s*)*\d+$');
+    // Regular expression to allow negative numbers, zero, and commas
+    final RegExp validInputPattern = RegExp(r'^(-?\d+\s*,\s*)*-?\d+$');
 
     if (!validInputPattern.hasMatch(input)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text('Please enter only numbers separated by commas.')),
+        SnackBar(content: Text('Please enter only numbers separated by commas.')),
       );
       return false;
     }
@@ -73,13 +73,11 @@ class _SortingPageState extends State<SortingPage> {
     return true;
   }
 
-  // Show loading dialog and redirect to SortingAnimationPage
   void _goToSortingAnimation(String algorithm) {
-    if (_parseInput() && _numbers.isNotEmpty && !_numbers.contains(0)) {
+    if (_parseInput() && _numbers.isNotEmpty) { // No need to check for `_numbers.contains(0)`
       _showLoadingDialog(() {
         Navigator.pop(context); // Close loading dialog
-        _navigateToSortingAnimation(
-            algorithm); // Navigate to sorting animation page
+        _navigateToSortingAnimation(algorithm); // Navigate to sorting animation page
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -90,16 +88,12 @@ class _SortingPageState extends State<SortingPage> {
 
   // Show loading dialog for comparison
   void _goToComparisonPage() {
-    if (_parseInput()) {
+    if (_parseInput() && _numbers.isNotEmpty) {
       if (_selectedAlgorithms.length < 2) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
               content: Text(
                   'Please select at least two algorithms for comparison.')),
-        );
-      } else if (_numbers.isEmpty || _numbers.contains(0)) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Please enter numbers to compare.')),
         );
       } else {
         _showLoadingDialog(() {
@@ -107,15 +101,20 @@ class _SortingPageState extends State<SortingPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ComparisonPage(
-                selectedAlgorithms: _selectedAlgorithms,
-                numbers: _numbers,
-                speed: 1, // Default speed for comparison
-              ),
+              builder: (context) =>
+                  ComparisonPage(
+                    selectedAlgorithms: _selectedAlgorithms,
+                    numbers: _numbers,
+                    speed: 1, // Default speed for comparison
+                  ),
             ),
           );
         });
       }
+    }else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter numbers to compare.')),
+      );
     }
   }
 
