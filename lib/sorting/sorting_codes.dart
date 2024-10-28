@@ -1380,128 +1380,80 @@ class _AlgorithmAnimationPageState extends State<AlgorithmAnimationPage> {
         foregroundColor: Colors.white,
       ),
       body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Language Dropdown
-                DropdownButtonHideUnderline(
-                  child: InkWell(
-                    splashColor: Colors.transparent, // Remove splash color
-                    highlightColor: Colors.transparent, // Remove highlight color
-                    child: DropdownButton<String>(
-                      value: _selectedLanguage,
-                      dropdownColor: Colors.purple[100], // Set dropdown background color
-                      iconEnabledColor: Colors.purple, // Change icon color to purple
-                      items: ['C', 'C++', 'Java', 'Python'].map((String language) {
-                        return DropdownMenuItem<String>(
+    children: [
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Language Dropdown
+            DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _selectedLanguage,
+                dropdownColor: Colors.purple[100],
+                items: ['C', 'C++', 'Java', 'Python']
+                    .map((language) => DropdownMenuItem(
                           value: language,
-                          child: Text(
-                            language,
-                            style: TextStyle(color: Colors.purple), // Set text color
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (String? newLanguage) {
-                        setState(() {
-                          _selectedLanguage = newLanguage!;
-                        });
-                      },
-                      selectedItemBuilder: (BuildContext context) {
-                        return ['C', 'C++', 'Java', 'Python'].map<Widget>((String value) {
-                          return Text(
-                            value,
-                            style: TextStyle(color: Colors.purple), // Set selected text color
-                          );
-                        }).toList();
-                      },
-                    ),
-                  ),
-                ),
-                // Theme Toggle Button
-                IconButton(
-                  icon: Icon(Icons.brightness_6, color: Colors.purple), // Set icon color to purple
-                  onPressed: () {
-                    setState(() {
-                      _isDarkTheme = !_isDarkTheme;
-                    });
-                  },
-                ),
-                // Copy to Clipboard Button
-                IconButton(
-                  icon: Icon(Icons.copy, color: Colors.purple), // Set icon color to purple
-                  onPressed: () async {
-                    if (await Clipboard.setData(ClipboardData(text: code)).then((_) => true)) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Code copied to clipboard')),
-                      );
-                    } else {
-                      // Web workaround
-                      final controller = TextEditingController(text: code);
-                      await showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text("Copy Code"),
-                          content: TextField(
-                            controller: controller,
-                            readOnly: true,
-                            decoration: InputDecoration(
-                              hintText: "Copy manually if clipboard is restricted.",
-                            ),
-                          ),
-                          actions: [
-                            TextButton(
-                              child: Text("Close"),
-                              onPressed: () => Navigator.of(context).pop(),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  },
-                ),
-              ],
+                          child: Text(language, style: TextStyle(fontSize: 16)),
+                        ))
+                    .toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedLanguage = newValue!;
+                  });
+                },
+              ),
             ),
-          ),
-          // Code Display Area
-          Expanded(
+            // Centered Dark Mode Icon
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: IconButton(
+                icon: Icon(
+                  _isDarkTheme ? Icons.brightness_3 : Icons.brightness_7,
+                  color: Colors.purple,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isDarkTheme = !_isDarkTheme;
+                  });
+                },
+              ),
+            ),
+            // Copy to Clipboard Button
+            IconButton(
+              icon: Icon(Icons.copy, color: Colors.purple),
+              onPressed: () {
+                Clipboard.setData(ClipboardData(text: code));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Code copied to clipboard!')),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+      // Code Display Area with SelectableText for partial copying
+      Expanded(
+        child: SingleChildScrollView(
+          child: IntrinsicHeight(
             child: Container(
               padding: const EdgeInsets.all(16.0),
-              color: _isDarkTheme ? Colors.black87 : Colors.white,
-              constraints: BoxConstraints(
-                maxWidth: 400, // Fixed width of the code window
-                maxHeight: 300, // Fixed height of the code window
-              ),
-              child: Scrollbar(
-                thumbVisibility: true, // Always show the scrollbar thumbs
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical, // Vertical scrolling
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal, // Horizontal scrolling for long lines
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: 400, // Match the width of the window
-                        minHeight: 300, // Match the height of the window
-                      ),
-                      child: SelectableText(
-                        code,
-                        style: TextStyle(
-                          color: _isDarkTheme ? Colors.white : Colors.black,
-                          fontFamily: 'monospace',
-                          fontSize: 10,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                  ),
+              color: _isDarkTheme ? Colors.black : Colors.white,
+              child: SelectableText(
+                code,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: _isDarkTheme ? Colors.white : Colors.black,
+                  fontFamily: 'Courier', // Code-style font
                 ),
+                textAlign: TextAlign.left,
               ),
             ),
           ),
-        ],
+        ),
       ),
-    );
+    ],
+  ),
+);
   }
 }
