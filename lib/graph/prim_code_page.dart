@@ -165,73 +165,80 @@ class _PrimsCodePageState extends State<PrimsCodePage> {
         foregroundColor: Colors.white,
       ),
       body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Language Dropdown
-                DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    value: _selectedLanguage,
-                    dropdownColor: Colors.purple[100],
-                    iconEnabledColor: Colors.purple,
-                    items: ['C', 'C++', 'Java', 'Python'].map((String language) {
-                      return DropdownMenuItem<String>(
-                        value: language,
-                        child: Text(language, style: TextStyle(color: Colors.purple)),
-                      );
-                    }).toList(),
-                    onChanged: (String? newLanguage) {
-                      setState(() {
-                        _selectedLanguage = newLanguage!;
-                      });
-                    },
-                  ),
-                ),
-                // Theme Toggle Button
-                IconButton(
-                  icon: Icon(Icons.brightness_6, color: Colors.purple),
-                  onPressed: () {
-                    setState(() {
-                      _isDarkTheme = !_isDarkTheme;
-                    });
-                  },
-                ),
-                // Copy to Clipboard Button
-                IconButton(
-                  icon: Icon(Icons.copy, color: Colors.purple),
-                  onPressed: () async {
-                    await Clipboard.setData(ClipboardData(text: code));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Code copied to clipboard')),
-                    );
-                  },
-                ),
-              ],
+    children: [
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Language Dropdown
+            DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _selectedLanguage,
+                dropdownColor: Colors.purple[100],
+                items: ['C', 'C++', 'Java', 'Python']
+                    .map((language) => DropdownMenuItem(
+                          value: language,
+                          child: Text(language, style: TextStyle(fontSize: 16)),
+                        ))
+                    .toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedLanguage = newValue!;
+                  });
+                },
+              ),
             ),
-          ),
-          // Code Display Area
-          Expanded(
+            // Centered Dark Mode Icon
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: IconButton(
+                icon: Icon(
+                  _isDarkTheme ? Icons.brightness_3 : Icons.brightness_7,
+                  color: Colors.purple,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isDarkTheme = !_isDarkTheme;
+                  });
+                },
+              ),
+            ),
+            // Copy to Clipboard Button
+            IconButton(
+              icon: Icon(Icons.copy, color: Colors.purple),
+              onPressed: () {
+                Clipboard.setData(ClipboardData(text: code));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Code copied to clipboard!')),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+      // Code Display Area with SelectableText for partial copying
+      Expanded(
+        child: SingleChildScrollView(
+          child: IntrinsicHeight(
             child: Container(
               padding: const EdgeInsets.all(16.0),
-              color: _isDarkTheme ? Colors.black87 : Colors.white,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: SelectableText(
-                  code,
-                  style: TextStyle(
-                    color: _isDarkTheme ? Colors.white : Colors.black,
-                    fontFamily: 'monospace',
-                    fontSize: 14,
-                  ),
+              color: _isDarkTheme ? Colors.black : Colors.white,
+              child: SelectableText(
+                code,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: _isDarkTheme ? Colors.white : Colors.black,
+                  fontFamily: 'Courier', // Code-style font
                 ),
+                textAlign: TextAlign.left,
               ),
             ),
           ),
-        ],
+        ),
       ),
-    );
+    ],
+  ),
+);
   }
 }
