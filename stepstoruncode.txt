@@ -74,3 +74,8 @@ Done by Madhan-5:
 A complete revamp has been done to graph algorithms
 Icons added 
 removed flutter logo loading 
+
+Done by Kavin Malar: 
+updated sorting_page.dart to handle 0 and negative inputs.
+updated sorting_animation_page to handle negative inputs.
+updated searching_page.dart for the show dialog.
