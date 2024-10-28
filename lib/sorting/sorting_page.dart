@@ -25,16 +25,7 @@ class _SortingPageState extends State<SortingPage> {
     'Quick Sort',
   ];
 
-  // Function to parse user input into a list of integers
-  // void _parseInput() {
-  //   setState(() {
-  //     _numbers = _numbersController.text
-  //         .split(',')
-  //         .map((e) => int.tryParse(e.trim()) ?? 0)
-  //         .toList();
-  //   });
-  // }
-
+  // Parse input for numbers
   bool _parseInput() {
     String input = _numbersController.text;
 
@@ -42,14 +33,13 @@ class _SortingPageState extends State<SortingPage> {
     final RegExp validInputPattern = RegExp(r'^(\d+\s*,\s*)*\d+$');
 
     if (!validInputPattern.hasMatch(input)) {
-      // Show error message if input contains invalid characters
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter only numbers separated by commas.')),
+        SnackBar(
+            content: Text('Please enter only numbers separated by commas.')),
       );
       return false;
     }
 
-    // If input is valid, parse it into a list of integers
     setState(() {
       _numbers = input.split(',').map((e) => int.parse(e.trim())).toList();
     });
@@ -58,11 +48,11 @@ class _SortingPageState extends State<SortingPage> {
 
   // Show loading dialog and redirect to SortingAnimationPage
   void _goToSortingAnimation(String algorithm) {
-    _parseInput();
-    if (_numbers.isNotEmpty && !_numbers.contains(0)) {
+    if (_parseInput() && _numbers.isNotEmpty && !_numbers.contains(0)) {
       _showLoadingDialog(() {
         Navigator.pop(context); // Close loading dialog
-        _navigateToSortingAnimation(algorithm); // Navigate to sorting animation page
+        _navigateToSortingAnimation(
+            algorithm); // Navigate to sorting animation page
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -73,29 +63,32 @@ class _SortingPageState extends State<SortingPage> {
 
   // Show loading dialog for comparison
   void _goToComparisonPage() {
-    _parseInput();
-    if (_selectedAlgorithms.length < 2) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please select at least two algorithms for comparison.')),
-      );
-    } else if (_numbers.isEmpty || _numbers.contains(0)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter numbers to compare.')),
-      );
-    } else {
-      _showLoadingDialog(() {
-        Navigator.pop(context); // Close loading dialog
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ComparisonPage(
-              selectedAlgorithms: _selectedAlgorithms,
-              numbers: _numbers,
-              speed: 1, // Default speed for comparison
-            ),
-          ),
+    if (_parseInput()) {
+      if (_selectedAlgorithms.length < 2) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(
+                  'Please select at least two algorithms for comparison.')),
         );
-      });
+      } else if (_numbers.isEmpty || _numbers.contains(0)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Please enter numbers to compare.')),
+        );
+      } else {
+        _showLoadingDialog(() {
+          Navigator.pop(context); // Close loading dialog
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ComparisonPage(
+                selectedAlgorithms: _selectedAlgorithms,
+                numbers: _numbers,
+                speed: 1, // Default speed for comparison
+              ),
+            ),
+          );
+        });
+      }
     }
   }
 
@@ -129,6 +122,8 @@ class _SortingPageState extends State<SortingPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Sorting Algorithms'),
+        backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -140,6 +135,7 @@ class _SortingPageState extends State<SortingPage> {
               controller: _numbersController,
               decoration: InputDecoration(
                 labelText: 'Enter numbers separated by commas',
+                border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.number,
             ),
@@ -168,63 +164,74 @@ class _SortingPageState extends State<SortingPage> {
               ),
             ),
 
-            // Comparison button
-            ElevatedButton(
-              onPressed: () {
-                // Show a dialog to select algorithms for comparison
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return StatefulBuilder(
-                      builder: (BuildContext context, StateSetter setState) {
-                        return AlertDialog(
-                          title: Text('Select algorithms to compare'),
-                          content: SingleChildScrollView(
-                            child: Column(
-                              children: _algorithms.map((algorithm) {
-                                bool isSelected = _selectedAlgorithms.contains(algorithm);
-                                return CheckboxListTile(
-                                  title: Text(algorithm),
-                                  value: isSelected,
-                                  onChanged: (bool? value) {
-                                    setState(() {
-                                      if (value == true) {
-                                        _selectedAlgorithms.add(algorithm);
-                                      } else {
-                                        _selectedAlgorithms.remove(algorithm);
-                                      }
-                                    });
-                                  },
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                          actions: [
-                            TextButton(
-                              child: Text('Cancel'),
-                              onPressed: () {
-                                Navigator.of(context).pop(); // Close the dialog
-                              },
-                            ),
-                            TextButton(
-                              child: Text('Compare'),
-                              onPressed: () {
-                                Navigator.of(context).pop(); // Close the selection dialog
-                                _goToComparisonPage(); // Call to navigate with loading dialog
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                );
-              },
-              child: Text('Comparison'),
+            // Centered comparison button
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  _showAlgorithmSelectionDialog();
+                },
+                child: Text('Comparison'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple,
+                  foregroundColor: Colors.white,
+                ),
+              ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  // Show algorithm selection dialog for comparison
+  void _showAlgorithmSelectionDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              title: Text('Select algorithms to compare'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: _algorithms.map((algorithm) {
+                    bool isSelected = _selectedAlgorithms.contains(algorithm);
+                    return CheckboxListTile(
+                      title: Text(algorithm),
+                      value: isSelected,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          if (value == true) {
+                            _selectedAlgorithms.add(algorithm);
+                          } else {
+                            _selectedAlgorithms.remove(algorithm);
+                          }
+                        });
+                      },
+                    );
+                  }).toList(),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                ),
+                TextButton(
+                  child: Text('Compare'),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the selection dialog
+                    _goToComparisonPage(); // Call to navigate with loading dialog
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 }
@@ -252,7 +259,7 @@ class _LoadingDialogState extends State<LoadingDialog> {
           _controller.play(); // Start video playback
         });
 
-        // After 5 seconds, complete the loading and navigate
+        // After 3 seconds, complete the loading and navigate
         Future.delayed(Duration(seconds: 3), () {
           widget.onComplete(); // Call the navigation function
         });
@@ -278,9 +285,9 @@ class _LoadingDialogState extends State<LoadingDialog> {
         child: Center(
           child: _controller.value.isInitialized
               ? AspectRatio(
-            aspectRatio: _controller.value.aspectRatio,
-            child: VideoPlayer(_controller),
-          )
+                  aspectRatio: _controller.value.aspectRatio,
+                  child: VideoPlayer(_controller),
+                )
               : CircularProgressIndicator(), // Show a loader while the video initializes
         ),
       ),
