@@ -79,3 +79,7 @@ Done by Kavin Malar:
 updated sorting_page.dart to handle 0 and negative inputs.
 updated sorting_animation_page to handle negative inputs.
 updated searching_page.dart for the show dialog.
+
+Done by Madhan-6:
+Added status message for kruskal and prims algorithm.
+New titlecard.mov updated
