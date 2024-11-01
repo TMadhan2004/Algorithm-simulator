@@ -111,7 +111,7 @@ class _KruskalInputPageState extends State<KruskalInputPage> {
               if (widget.algorithm == 'Kruskal') {
                 return KruskalPage(adjacencyList: adjacencyList);
               } else {
-                return PrimPage(adjacencyList: adjacencyList);
+                return PrimsPage(adjacencyList: adjacencyList);
               }
             },
           ),
