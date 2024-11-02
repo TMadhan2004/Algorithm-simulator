@@ -40,8 +40,9 @@ class _SortingPageState extends State<SortingPage> {
         content: Text(
           'Only 9 numbers are allowed '
               'Integers can be given as input. '
-              'For radix sort with neagtive numbers negative and positive inputs are treated seperately.'
-              'Please ensure you follow these restrictions while entering inputs.',
+              'Please ensure you follow these restrictions while entering inputs.'
+              'Comparison graph with radix sort connot give graph for digit inputs.\n'
+              'Note : For radix sort with neagtive numbers negative and positive inputs are treated seperately.',
         ),
         actions: [
           TextButton(
