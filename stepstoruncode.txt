@@ -85,5 +85,5 @@ Added status message for kruskal and prims algorithm.
 New titlecard.mov updated
 
 Done by Kavin Malar :
-updated sorting comparison_page.dart
+updated sorting comparison_page.dart for correct working 
 changes in sorting_page.dart
