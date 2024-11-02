@@ -83,3 +83,6 @@ updated searching_page.dart for the show dialog.
 Done by Madhan-6:
 Added status message for kruskal and prims algorithm.
 New titlecard.mov updated
+
+Done by Kavin Malar :
+updated sorting comparison_page.dart
