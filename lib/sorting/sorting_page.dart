@@ -13,7 +13,6 @@ class _SortingPageState extends State<SortingPage> {
   List<int> _numbers = [];
   List<String> _selectedAlgorithms = [];
 
-  // List of sorting algorithms
   final List<String> _algorithms = [
     'Bubble Sort',
     'Selection Sort',
@@ -28,7 +27,6 @@ class _SortingPageState extends State<SortingPage> {
   @override
   void initState() {
     super.initState();
-    // Show the disclaimer dialog when the page is first initialized
     WidgetsBinding.instance.addPostFrameCallback((_) => _showDisclaimerDialog());
   }
 
@@ -40,9 +38,8 @@ class _SortingPageState extends State<SortingPage> {
         content: Text(
           'Only 9 numbers are allowed '
               'Integers can be given as input. '
-              'Please ensure you follow these restrictions while entering inputs.'
-              'Comparison graph with radix sort connot give graph for digit inputs.\n'
-              'Note : For radix sort with negative numbers negative and positive inputs are treated seperately.',
+              'Please ensure you follow these restrictions while entering inputs.\n'
+              'Note : For radix sort with negative numbers, negative and positive inputs are treated seperately.',
         ),
         actions: [
           TextButton(
@@ -54,11 +51,9 @@ class _SortingPageState extends State<SortingPage> {
     );
   }
 
-  // Parse input for numbers
   bool _parseInput() {
     String input = _numbersController.text;
 
-    // Regular expression to allow negative numbers, zero, and commas
     final RegExp validInputPattern = RegExp(r'^(-?\d+\s*,\s*)*-?\d+$');
 
     if (!validInputPattern.hasMatch(input)) {
@@ -75,10 +70,10 @@ class _SortingPageState extends State<SortingPage> {
   }
 
   void _goToSortingAnimation(String algorithm) {
-    if (_parseInput() && _numbers.isNotEmpty) { // No need to check for `_numbers.contains(0)`
+    if (_parseInput() && _numbers.isNotEmpty) {
       _showLoadingDialog(() {
-        Navigator.pop(context); // Close loading dialog
-        _navigateToSortingAnimation(algorithm); // Navigate to sorting animation page
+        Navigator.pop(context);
+        _navigateToSortingAnimation(algorithm);
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -87,7 +82,6 @@ class _SortingPageState extends State<SortingPage> {
     }
   }
 
-  // Show loading dialog for comparison
   void _goToComparisonPage() {
     if (_parseInput() && _numbers.isNotEmpty) {
       if (_selectedAlgorithms.length < 2) {
@@ -119,18 +113,16 @@ class _SortingPageState extends State<SortingPage> {
     }
   }
 
-  // Show loading dialog with video
   void _showLoadingDialog(VoidCallback onComplete) {
     showDialog(
       context: context,
-      barrierDismissible: false, // Prevent dismissing the dialog
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return LoadingDialog(onComplete: onComplete);
       },
     );
   }
 
-  // Function to navigate to SortingAnimationPage
   void _navigateToSortingAnimation(String algorithm) {
     Navigator.push(
       context,
@@ -210,8 +202,11 @@ class _SortingPageState extends State<SortingPage> {
     );
   }
 
-  // Show algorithm selection dialog for comparison
   void _showAlgorithmSelectionDialog() {
+    final List<String> comparisonAlgorithms = _algorithms
+        .where((algorithm) => algorithm != 'Merge Sort' && algorithm != 'Radix Sort')
+        .toList();
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -222,7 +217,7 @@ class _SortingPageState extends State<SortingPage> {
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: _algorithms.map((algorithm) {
+                  children: comparisonAlgorithms.map((algorithm) {
                     bool isSelected = _selectedAlgorithms.contains(algorithm);
                     return CheckboxListTile(
                       title: Text(algorithm),
@@ -263,7 +258,6 @@ class _SortingPageState extends State<SortingPage> {
   }
 }
 
-// LoadingDialog remains unchanged
 class LoadingDialog extends StatefulWidget {
   final Function onComplete;
 
@@ -282,13 +276,12 @@ class _LoadingDialogState extends State<LoadingDialog> {
     _controller = VideoPlayerController.asset('assets/loading.mov')
       ..initialize().then((_) {
         setState(() {
-          _controller.setLooping(false); // Play once
-          _controller.play(); // Start video playback
+          _controller.setLooping(false);
+          _controller.play();
         });
 
-        // After 3 seconds, complete the loading and navigate
         Future.delayed(Duration(seconds: 3), () {
-          widget.onComplete(); // Call the navigation function
+          widget.onComplete();
         });
       });
   }
@@ -303,11 +296,11 @@ class _LoadingDialogState extends State<LoadingDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(50.0), // Circular shape
+        borderRadius: BorderRadius.circular(50.0),
       ),
-      backgroundColor: Colors.white, // White background
+      backgroundColor: Colors.white,
       child: Container(
-        width: 200, // Adjust the size of the dialog
+        width: 200,
         height: 200,
         child: Center(
           child: _controller.value.isInitialized
@@ -315,7 +308,7 @@ class _LoadingDialogState extends State<LoadingDialog> {
             aspectRatio: _controller.value.aspectRatio,
             child: VideoPlayer(_controller),
           )
-              : CircularProgressIndicator(), // Show a loader while the video initializes
+              : CircularProgressIndicator(),
         ),
       ),
     );
