@@ -86,3 +86,4 @@ New titlecard.mov updated
 
 Done by Kavin Malar :
 updated sorting comparison_page.dart
+changes in sorting_page.dart
