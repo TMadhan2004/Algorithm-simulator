@@ -40,7 +40,8 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
 
   void _resetSorting() {
     setState(() {
-      _numbers = List.from(widget.numbers); 
+      // Reset the state variables
+      _numbers = List.from(widget.numbers); // Reset to original numbers
       _positions = List.generate(_numbers.length, (index) => index);
       _currentStep = 0;
       _isSorting = false;
@@ -90,7 +91,7 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
     setState(() {
       _isCompleted = true;
     });
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(Duration(seconds: 4));
     setState(() {
       _isSorting = false;
     });
@@ -187,6 +188,7 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
 
   Future<void> _insertionSort() async {
     List<int> arr = List.from(_numbers);
+    _swapCount = 0; // Reset swap count at the start
 
     for (int i = 1; i < arr.length; i++) {
       int key = arr[i];
@@ -201,8 +203,7 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
       // Shift elements larger than the key
       while (j >= 0 && arr[j] > key) {
         arr[j + 1] = arr[j];
-        _steps
-            .add('Shifted ${arr[j]} to position ${j + 2} -> ${arr.toString()}');
+        _steps.add('Shifted ${arr[j]} to position ${j + 2} -> ${arr.toString()}');
 
         setState(() {
           _currentDescription = _steps.last;
@@ -214,14 +215,17 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
         j--;
       }
 
-      arr[j + 1] = key;
-      _steps.add('Inserted $key at position ${j + 1} -> ${arr.toString()}');
-      setState(() {
-        _currentDescription = _steps.last;
-        _numbers = List.from(arr);
-        _sortedUntil = i; // Update the sorted index
-        _swapCount++;
-      });
+      // Only increment the swap count when we actually place the key
+      if (j + 1 != i) {
+        arr[j + 1] = key;
+        _steps.add('Inserted $key at position ${j + 1} -> ${arr.toString()}');
+        setState(() {
+          _currentDescription = _steps.last;
+          _numbers = List.from(arr);
+          _sortedUntil = i; // Update the sorted index
+          _swapCount++; // Increment swap count when inserting
+        });
+      }
     }
     setState(() {
       _highlightIndex = -1; // Reset highlighting
@@ -231,6 +235,17 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
   Future<void> _shellSort() async {
     List<int> arr = List.from(_numbers);
     int gap = arr.length ~/ 2;
+
+    // Add a step for the initial input and display it
+    _steps.add('Initial array: ${arr.toString()}');
+    setState(() {
+      _currentDescription = _steps.last;
+      _numbers = List.from(arr);
+      _highlightIndex = -1; // No element highlighted at the start
+    });
+
+    // Delay to show the initial state
+    await Future.delayed(Duration(seconds: 4));
 
     while (gap > 0) {
       for (int i = gap; i < arr.length; i++) {
@@ -642,50 +657,84 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
                   Text('Sorting with ${widget.algorithm}'),
                   SizedBox(height: 16),
                   Center(
-                    child: Container(
-                      width: _numbers.length * 40.0,
-                      height: MediaQuery.of(context).size.height * 0.4,
-                      child: Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: List.generate(_numbers.length, (index) {
-                          return AnimatedPositioned(
-                            duration: Duration(milliseconds: 500), // Adjust for smoother animations
-                            left: index * 40.0, // Space each column horizontally
-                            bottom: 0,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Container(
-                                  width: 30,
-                                  height: range > 0
-                                      ? ((_numbers[index] - minNumber) / range) * 200 + 10 // Ensure minimum height
-                                      : 10,
-                                  color: index == _pivotIndex
-                                      ? Colors.orange // Pivot element in orange
-                                      : index == _highlightIndex
-                                      ? Colors.red // Highlighted element in red
-                                      : (index <= _sortedUntil
-                                      ? Colors.green
-                                      : Colors.blue),
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final int count = _numbers.length;
+                        final bool shrinkUI = count > 9;
+                        final double availableWidth = constraints.maxWidth;
+                        final double barWidth = shrinkUI
+                            ? availableWidth / (count * 1.5)
+                            : 30.0;
+                        final double maxBarHeight =
+                            MediaQuery.of(context).size.height * 0.4;
+
+                        // Calculate font size based on the count
+                        double fontSize;
+                        if (count <= 9) {
+                          fontSize = 8.0;  // Font size for 9 or less
+                        } else if (count <= 15) {
+                          fontSize = 6.0;  // Font size for 10 to 15
+                        } else if (count <= 20) {
+                          fontSize = 4.0;  // Font size for 16 to 20
+                        } else {
+                          fontSize = 4.0;  // You can adjust this for larger counts
+                        }
+
+                        return Container(
+                          width: shrinkUI ? availableWidth : count * 40.0,
+                          height: maxBarHeight,
+                          child: Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: List.generate(count, (index) {
+                              return AnimatedPositioned(
+                                duration: Duration(milliseconds: 500),
+                                left: shrinkUI
+                                    ? index * (barWidth + barWidth * 0.5)
+                                    : index * 40.0,
+                                bottom: 0,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      width: barWidth,
+                                      height: range > 0
+                                          ? ((_numbers[index] - minNumber) /
+                                          range) *
+                                          maxBarHeight +
+                                          10
+                                          : 10,
+                                      color: index == _pivotIndex
+                                          ? Colors.orange
+                                          : index == _highlightIndex
+                                          ? Colors.red
+                                          : (index <= _sortedUntil
+                                          ? Colors.green
+                                          : Colors.blue),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Container(
+                                      width: barWidth,
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        '${_numbers[index]}',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: fontSize,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(height: 4),
-                                Text(
-                                  '${_numbers[index]}', // Display number below container
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                      ),
+                              );
+                            }),
+                          ),
+                        );
+                      },
                     ),
                   ),
                   SizedBox(height: 16),
-                  Text('Swaps: $_swapCount'),
                 ],
               )
                   : _isCompleted
@@ -695,40 +744,76 @@ class _SortingAnimationPageState extends State<SortingAnimationPage> {
                   Text('Sorting Complete!'),
                   SizedBox(height: 16),
                   Center(
-                    child: Container(
-                      width: _numbers.length * 40.0,
-                      height: MediaQuery.of(context).size.height * 0.4,
-                      child: Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: List.generate(_numbers.length, (index) {
-                          return AnimatedPositioned(
-                            duration: Duration(milliseconds: 300), // Adjust for smoother animations
-                            left: index * 40.0,
-                            bottom: 0,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Container(
-                                  width: 30,
-                                  height: range > 0
-                                      ? ((_numbers[index] - minNumber) / range) * 200 + 10 // Ensure minimum height
-                                      : 10,
-                                  color: Colors.green, // Final sorted order color
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final int count = _numbers.length;
+                        final bool shrinkUI = count > 9;
+                        final double availableWidth = constraints.maxWidth;
+                        final double barWidth = shrinkUI
+                            ? availableWidth / (count * 1.5)
+                            : 30.0;
+                        final double maxBarHeight =
+                            MediaQuery.of(context).size.height * 0.4;
+
+                        // Calculate font size based on the count
+                        double fontSize;
+                        if (count <= 9) {
+                          fontSize = 8.0;  // Font size for 9 or less
+                        } else if (count <= 15) {
+                          fontSize = 6.0;  // Font size for 10 to 15
+                        } else if (count <= 20) {
+                          fontSize = 4.0;  // Font size for 16 to 20
+                        } else {
+                          fontSize = 4.0;  // You can adjust this for larger counts
+                        }
+
+                        return Container(
+                          width: shrinkUI ? availableWidth : count * 40.0,
+                          height: maxBarHeight,
+                          child: Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: List.generate(count, (index) {
+                              return AnimatedPositioned(
+                                duration: Duration(milliseconds: 300),
+                                left: shrinkUI
+                                    ? index * (barWidth + barWidth * 0.5)
+                                    : index * 40.0,
+                                bottom: 0,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      width: barWidth,
+                                      height: range > 0
+                                          ? ((_numbers[index] -
+                                          minNumber) /
+                                          range) *
+                                          maxBarHeight +
+                                          10
+                                          : 10,
+                                      color: Colors.green,
+                                    ),
+                                    SizedBox(height: 4),
+                                    Container(
+                                      width: barWidth,
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        '${_numbers[index]}',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: fontSize,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(height: 4),
-                                Text(
-                                  '${_numbers[index]}', // Display number below container
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                      ),
+                              );
+                            }),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],
