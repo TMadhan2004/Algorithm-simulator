@@ -24,33 +24,6 @@ class _SortingPageState extends State<SortingPage> {
     'Quick Sort',
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _showDisclaimerDialog());
-  }
-
-  void _showDisclaimerDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Disclaimer'),
-        content: Text(
-          'Only 9 numbers are allowed '
-              'Integers can be given as input. '
-              'Please ensure you follow these restrictions while entering inputs.\n'
-              'Note : For radix sort with negative numbers, negative and positive inputs are treated seperately.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
-
   bool _parseInput() {
     String input = _numbersController.text;
 
@@ -71,10 +44,14 @@ class _SortingPageState extends State<SortingPage> {
 
   void _goToSortingAnimation(String algorithm) {
     if (_parseInput() && _numbers.isNotEmpty) {
-      _showLoadingDialog(() {
-        Navigator.pop(context);
-        _navigateToSortingAnimation(algorithm);
-      });
+      if (_numbers.length > 20) {
+        _showMaxInputDialog();
+      } else {
+        _showLoadingDialog(() {
+          Navigator.pop(context);
+          _navigateToSortingAnimation(algorithm);
+        });
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please enter numbers to sort.')),
@@ -84,11 +61,11 @@ class _SortingPageState extends State<SortingPage> {
 
   void _goToComparisonPage() {
     if (_parseInput() && _numbers.isNotEmpty) {
-      if (_selectedAlgorithms.length < 2) {
+      if (_numbers.length > 20) {
+        _showMaxInputDialog();
+      } else if (_selectedAlgorithms.length < 2) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-                  'Please select at least two algorithms for comparison.')),
+          SnackBar(content: Text('Please select at least two algorithms for comparison.')),
         );
       } else {
         _showLoadingDialog(() {
@@ -106,11 +83,27 @@ class _SortingPageState extends State<SortingPage> {
           );
         });
       }
-    }else {
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please enter numbers to compare.')),
       );
     }
+  }
+
+  void _showMaxInputDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Input Limit Exceeded'),
+        content: Text('You can only enter up to 20 numbers for sorting or comparison. Please reduce the number of inputs.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showLoadingDialog(VoidCallback onComplete) {
@@ -204,7 +197,7 @@ class _SortingPageState extends State<SortingPage> {
 
   void _showAlgorithmSelectionDialog() {
     final List<String> comparisonAlgorithms = _algorithms
-        .where((algorithm) => algorithm != 'Merge Sort' && algorithm != 'Radix Sort')
+        .where((algorithm) => algorithm != 'Merge Sort' && algorithm != 'Radix Sort' && algorithm != 'Heap Sort' && algorithm != 'Quick Sort')
         .toList();
 
     showDialog(
