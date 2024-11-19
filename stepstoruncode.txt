@@ -87,3 +87,7 @@ New titlecard.mov updated
 Done by Kavin Malar :
 updated sorting comparison_page.dart for correct working 
 changes in sorting_page.dart
+
+Done by Kavin Malar : 
+updated sorting_animation_page.dart to support upto 20 inputs
+changes in sorting_page.dart
