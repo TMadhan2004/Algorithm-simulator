@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'searching_algorithm_description.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'searching_code_page.dart';
 
 class SearchingAnimationPage extends StatefulWidget {
@@ -92,14 +93,30 @@ class _SearchingAnimationPageState extends State<SearchingAnimationPage>
   }
 
   Future<void> _binarySearch() async {
-    List<int> arr = List.from(_numbers)..sort();
+    List<int> arr = List.from(_numbers);
+    bool isSorted = _isSorted(arr);
+
+    // If the array is not sorted, add a step for sorting
+    if (!isSorted) {
+      _steps.add('Step 0: The array is not sorted. Sorting the array...');
+      arr.sort(); // Sort the array
+      _iterations.add(List.from(arr)); // Capture the original array for Step 0
+      _highlightedIndices.add(-1); // No specific index highlighted for Step 0
+      await Future.delayed(Duration(milliseconds: widget.speed.toInt()));
+    } else {
+      _steps.add('Step 0: The array is already sorted.');
+      _iterations.add(List.from(arr)); // Capture the original array for Step 0
+      _highlightedIndices.add(-1); // No specific index highlighted for Step 0
+      await Future.delayed(Duration(milliseconds: widget.speed.toInt()));
+    }
+
     int left = 0;
     int right = arr.length - 1;
 
     while (left <= right) {
       int mid = left + (right - left) ~/ 2;
       _steps.add(
-          'Step ${_steps.length + 1}: Checking middle index $mid with value ${arr[mid]}');
+          'Step ${_steps.length}: Checking middle index $mid with value ${arr[mid]}');
       _iterations.add(List.from(arr));
       _highlightedIndices.add(mid);
 
@@ -110,7 +127,7 @@ class _SearchingAnimationPageState extends State<SearchingAnimationPage>
       await Future.delayed(Duration(milliseconds: widget.speed.toInt()));
 
       if (arr[mid] == _target) {
-        _steps.add('Step ${_steps.length + 1}: Found $_target at index $mid');
+        _steps.add('Step ${_steps.length}: Found $_target at index $mid');
         _foundTarget = true;
         _targetIndex = mid;
         setState(() {});
@@ -121,8 +138,17 @@ class _SearchingAnimationPageState extends State<SearchingAnimationPage>
         right = mid - 1;
       }
     }
-    _steps.add('Step ${_steps.length + 1}: $_target not found in the list');
+    _steps.add('Step ${_steps.length}: $_target not found in the list');
     setState(() {});
+  }
+
+  bool _isSorted(List<int> arr) {
+    for (int i = 0; i < arr.length - 1; i++) {
+      if (arr[i] > arr[i + 1]) {
+        return false;
+      }
+    }
+    return true;
   }
 
   Future<void> _hashing() async {
@@ -268,6 +294,13 @@ class _SearchingAnimationPageState extends State<SearchingAnimationPage>
             ],
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: Icon(Icons.arrow_back),
+        backgroundColor: Colors.purple,
       ),
     );
   }
