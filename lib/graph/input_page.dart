@@ -77,10 +77,19 @@ class _KruskalInputPageState extends State<KruskalInputPage> {
         return;
       }
 
+      // Check for negative weight
+      if (weight < 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Negative edge weights are not allowed!')),
+        );
+        return;
+      }
+
       // Check if the edge already exists (to avoid duplicates)
       bool edgeExists = adjacencyList.any((edge) =>
       (edge[0] == vertex1 && edge[1] == vertex2) ||
-          (edge[0] == vertex2 && edge[1] == vertex1));
+          (edge[0] == vertex2 && edge[1] == vertex1)
+      );
 
       if (!edgeExists) {
         // Add edges for both directions to represent undirected graph
@@ -99,6 +108,7 @@ class _KruskalInputPageState extends State<KruskalInputPage> {
       weightController.clear();
     }
   }
+
 
 
   void _runAlgorithm() {
