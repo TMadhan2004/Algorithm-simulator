@@ -91,3 +91,8 @@ changes in sorting_page.dart
 Done by Kavin Malar : 
 updated sorting_animation_page.dart to support upto 20 inputs
 changes in sorting_page.dart
+
+Done by Madhan-7:
+Updated dijkstra_page.dart code
+Exception cases for input graph are handled.
+Prims fixed but still not stable.
