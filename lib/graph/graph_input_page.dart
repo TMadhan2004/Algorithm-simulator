@@ -22,6 +22,7 @@ class _GraphInputPageState extends State<GraphInputPage> {
   final _vertex1Controller = TextEditingController();
   final _vertex2Controller = TextEditingController();
   final _weightController = TextEditingController();
+  Set<int> _validVertices = {}; // Track valid vertices
 
   @override
   void initState() {
@@ -75,10 +76,16 @@ class _GraphInputPageState extends State<GraphInputPage> {
       _showErrorMessage('Duplicate or reverse edges are not allowed.');
       return;
     }
+    if (widget.algorithm == 'Dijkstra' && weight < 0) {
+      _showErrorMessage('Negative weights are not allowed in Dijkstra\'s algorithm.');
+      return;
+    }
 
     // Add the edge
     setState(() {
       _edges.add([vertex1, vertex2, weight]);
+      _validVertices.add(vertex1);
+      _validVertices.add(vertex2);
     });
     _vertex1Controller.clear();
     _vertex2Controller.clear();
@@ -88,7 +95,7 @@ class _GraphInputPageState extends State<GraphInputPage> {
   void _showErrorMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message)
+        content: Text(message),
       ),
     );
   }
@@ -97,8 +104,8 @@ class _GraphInputPageState extends State<GraphInputPage> {
     final source = int.tryParse(_sourceController.text);
     final destination = int.tryParse(_destinationController.text);
 
-    if (source == null || destination == null || source < 0 || source > 9 || destination < 0 || destination > 9) {
-      _showErrorMessage('Source and destination vertices must be between 0 and 9.');
+    if (source == null || destination == null || !_validVertices.contains(source) || !_validVertices.contains(destination)) {
+      _showErrorMessage('Source and destination vertices must be among the entered vertices.');
       return;
     }
 
@@ -248,7 +255,7 @@ class _GraphInputPageState extends State<GraphInputPage> {
                 child: Text('Run ${widget.algorithm} Algorithm'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.purple,
-                  foregroundColor: Colors.white
+                  foregroundColor: Colors.white,
                 ),
               ),
               SizedBox(height: 20),
