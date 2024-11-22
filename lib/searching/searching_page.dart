@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'searching_animation_page.dart';
-import 'comparison_page.dart';
+import 'comparsion_page.dart';
 
 class SearchingPage extends StatefulWidget {
   @override
@@ -19,12 +19,12 @@ class _SearchingPageState extends State<SearchingPage> {
     'Binary Search',
     'Hashing'
   ];
-
   @override
   void initState() {
     super.initState();
     // Show the disclaimer dialog when the page is first initialized
-    WidgetsBinding.instance.addPostFrameCallback((_) => _showDisclaimerDialog());
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _showDisclaimerDialog());
   }
 
   void _showDisclaimerDialog() {
@@ -34,8 +34,8 @@ class _SearchingPageState extends State<SearchingPage> {
         title: Text('Disclaimer'),
         content: Text(
           'Only 8 numbers are allowed. '
-              'Integers can be entered as input. '
-              'Please ensure you follow these restrictions while entering inputs.',
+          'Integers can be entered as input. '
+          'Please ensure you follow these restrictions while entering inputs.',
         ),
         actions: [
           TextButton(
@@ -59,26 +59,48 @@ class _SearchingPageState extends State<SearchingPage> {
 
   // Navigate to animation page with loading dialog
   void _goToAnimationPage(String algorithm) {
-    _parseInput();
-    _target = int.tryParse(_targetController.text);
-    if (_numbers.isNotEmpty && _target != null) {
+    _parseInput(); // Parses the input numbers
+    _target = int.tryParse(_targetController.text); // Parses the target value
+
+    // Validation for invalid inputs
+    if (_numbersController.text.isEmpty && _targetController.text.isEmpty) {
+      _showErrorSnackBar('Please enter valid numbers and a target value.');
+    } else if (_numbersController.text.isEmpty) {
+      _showErrorSnackBar('Please enter valid numbers.');
+    } else if (_targetController.text.isEmpty) {
+      _showErrorSnackBar('Please enter a valid target value.');
+    } else if (_numbers.contains(0) && _numbersController.text.contains('.')) {
+      _showErrorSnackBar('Numbers must be comma-separated integers.');
+    } else if (_target == null) {
+      _showErrorSnackBar('The target value must be a valid integer.');
+    } else {
+      // Proceed to animation page if inputs are valid
       _showLoadingDialog(() {
         Navigator.pop(context);
         _navigateToAnimation(algorithm);
       });
-    } else {
-      _showErrorSnackBar('Please enter valid numbers and target.');
     }
   }
 
-  // Show loading dialog and navigate to ComparisonPage
   void _goToComparisonPage() {
-    _parseInput();
-    if (_selectedAlgorithms.length < 2) {
+    _parseInput(); // Parses the input numbers
+    _target = int.tryParse(_targetController.text); // Parses the target value
+
+    // Validation for invalid inputs
+    if (_numbersController.text.isEmpty && _targetController.text.isEmpty) {
+      _showErrorSnackBar('Please enter valid numbers and a target value.');
+    } else if (_numbersController.text.isEmpty) {
+      _showErrorSnackBar('Please enter valid numbers.');
+    } else if (_targetController.text.isEmpty) {
+      _showErrorSnackBar('Please enter a valid target value.');
+    } else if (_numbers.contains(0) && _numbersController.text.contains('.')) {
+      _showErrorSnackBar('Numbers must be comma-separated integers.');
+    } else if (_target == null) {
+      _showErrorSnackBar('The target value must be a valid integer.');
+    } else if (_selectedAlgorithms.length < 2) {
       _showErrorSnackBar('Select at least two algorithms for comparison.');
-    } else if (_numbers.isEmpty) {
-      _showErrorSnackBar('Enter numbers to compare.');
     } else {
+      // Proceed to comparison page if inputs are valid
       _showLoadingDialog(() {
         Navigator.pop(context);
         Navigator.push(
@@ -87,7 +109,7 @@ class _SearchingPageState extends State<SearchingPage> {
             builder: (context) => ComparisonPage(
               selectedAlgorithms: _selectedAlgorithms,
               numbers: _numbers,
-              target: _target ?? 0,
+              target: _target!,
             ),
           ),
         );
@@ -277,17 +299,16 @@ class _LoadingDialogState extends State<LoadingDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
-      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
       child: Container(
         width: 200,
         height: 200,
         child: Center(
           child: _controller.value.isInitialized
               ? AspectRatio(
-            aspectRatio: _controller.value.aspectRatio,
-            child: VideoPlayer(_controller),
-          )
+                  aspectRatio: _controller.value.aspectRatio,
+                  child: VideoPlayer(_controller),
+                )
               : CircularProgressIndicator(),
         ),
       ),
