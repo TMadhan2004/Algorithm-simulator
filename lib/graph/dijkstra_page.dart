@@ -153,8 +153,13 @@ class _DijkstraPageState extends State<DijkstraPage> with SingleTickerProviderSt
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            Text(
+              'Iteration $_iteration',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
             Expanded(
-              flex: 2,
+              flex: 2, // Set flex to match Bellman-Ford
               child: CustomPaint(
                 painter: GraphPainter(widget.edges, _path, _currentEdgeIndex),
                 child: Container(),
@@ -162,9 +167,6 @@ class _DijkstraPageState extends State<DijkstraPage> with SingleTickerProviderSt
             ),
             SizedBox(height: 20),
             _buildTable(),
-            SizedBox(height: 20),
-            Text('Iteration: $_iteration',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),), // Display iteration counter
             SizedBox(height: 20),
             Text('Shortest path from ${widget.source} to ${widget.destination}:'),
             SizedBox(height: 20),
@@ -184,6 +186,7 @@ class _DijkstraPageState extends State<DijkstraPage> with SingleTickerProviderSt
       ),
     );
   }
+
 
   Widget _buildTable() {
     return Column(
