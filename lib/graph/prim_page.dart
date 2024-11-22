@@ -63,33 +63,25 @@ class _PrimsPageState extends State<PrimsPage> with SingleTickerProviderStateMix
   }
 
   void _processNextEdge() {
-    if (_availableEdges.isEmpty && _includedVertices.isNotEmpty) {
-      setState(() {
-        _statusMessage = 'Prim\'s algorithm completed. MST found!';
-        _isRunning = false;
-        _hasRun = true;
-      });
-      return;
-    }
-
     Edge? minEdge;
+
     _availableEdges.sort((a, b) => a.weight.compareTo(b.weight));
     for (Edge edge in _availableEdges) {
-      // Check if adding the edge would create a cycle
-      if (_includedVertices.contains(edge.vertex1) && _includedVertices.contains(edge.vertex2)) {
+      if (_includedVertices.contains(edge.vertex1) && !_includedVertices.contains(edge.vertex2) ||
+          _includedVertices.contains(edge.vertex2) && !_includedVertices.contains(edge.vertex1)) {
+        minEdge = edge;
+        break;
+      } else if (_includedVertices.contains(edge.vertex1) && _includedVertices.contains(edge.vertex2)) {
         setState(() {
           _cycleEdges.add(edge);
           _statusMessage = 'Cycle detected with edge (${edge.vertex1}, ${edge.vertex2}). Highlighting in red.';
         });
-      } else if (!_includedVertices.contains(edge.vertex2)) {
-        minEdge = edge;
-        break;
       }
     }
 
     if (minEdge != null) {
       Edge edge = minEdge;
-      int newVertex = edge.vertex2;
+      int newVertex = !_includedVertices.contains(edge.vertex1) ? edge.vertex1 : edge.vertex2;
       setState(() {
         _mst.add(edge);
         _includedVertices.add(newVertex);
@@ -97,27 +89,27 @@ class _PrimsPageState extends State<PrimsPage> with SingleTickerProviderStateMix
       });
 
       _availableEdges.addAll(
-        _edges.where((edge) => edge.vertex1 == newVertex && !_includedVertices.contains(edge.vertex2)),
+        _edges.where((edge) => (_includedVertices.contains(edge.vertex1) && !_includedVertices.contains(edge.vertex2)) ||
+            (_includedVertices.contains(edge.vertex2) && !_includedVertices.contains(edge.vertex1))),
       );
-      _availableEdges.removeWhere((edge) => edge.vertex2 == newVertex);
 
+      _availableEdges.remove(edge);
       _controller.forward(from: 0);
     } else {
       setState(() {
         _isRunning = false;
         _hasRun = true;
-        _statusMessage = 'No more edges available. Prim\'s algorithm completed.';
+        _statusMessage = 'Prim\'s algorithm completed. MST found!';
       });
     }
   }
-
 
   void _startPrims() {
     setState(() {
       _isRunning = true;
       _includedVertices.add(0);  // Start from vertex 0 or any arbitrary vertex
       _availableEdges.addAll(
-          _edges.where((edge) => edge.vertex1 == 0)
+          _edges.where((edge) => edge.vertex1 == 0 || edge.vertex2 == 0)
       );
       _controller.forward();
     });
@@ -238,6 +230,10 @@ class Edge {
 
   Edge(this.vertex1, this.vertex2, this.weight);
 }
+
+
+
+
 
 class GraphPainter extends CustomPainter {
   final List<Edge> edges;
