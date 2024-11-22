@@ -46,23 +46,25 @@ class _ComparisonPageState extends State<ComparisonPage> {
   }
 
   void _findOptimalAlgorithm() {
-    int minSwaps = double.maxFinite.toInt();
-    String optimalAlgorithm = '';
+    int minTotalSwaps = double.maxFinite.toInt();
+    List<String> optimalAlgorithms = [];
 
     _totalSwapsPerAlgorithm.forEach((algorithm, totalSwaps) {
-      if (totalSwaps < minSwaps) {
-        minSwaps = totalSwaps;
-        optimalAlgorithm = algorithm;
+      if (totalSwaps < minTotalSwaps) {
+        minTotalSwaps = totalSwaps;
+        optimalAlgorithms = [algorithm]; // Reset the list with the new optimal algorithm
+      } else if (totalSwaps == minTotalSwaps) {
+        optimalAlgorithms.add(algorithm); // Add algorithm with the same minimum swaps
       }
     });
 
     setState(() {
-      _minSwaps = minSwaps;
-      _optimalAlgorithm = optimalAlgorithm;
+      _minSwaps = minTotalSwaps;
+      _optimalAlgorithm = optimalAlgorithms.join(", "); // Join names with a comma
     });
   }
 
-  Map<String, int> _totalSwapsPerAlgorithm = {}; 
+  Map<String, int> _totalSwapsPerAlgorithm = {};
 
 
   void _findMaxSwaps() {
@@ -92,10 +94,6 @@ class _ComparisonPageState extends State<ComparisonPage> {
         return await _insertionSort(input);
       case 'Shell Sort':
         return await _shellSort(input);
-      case 'Heap Sort':
-        return await _heapSort(input);
-      case 'Quick Sort':
-        return await _quickSort(input);
       default:
         throw Exception('Unknown sorting algorithm: $algorithm');
     }
@@ -128,7 +126,7 @@ class _ComparisonPageState extends State<ComparisonPage> {
       }
 
       if (!swapped) {
-        break; 
+        break;
       }
     }
 
@@ -137,8 +135,8 @@ class _ComparisonPageState extends State<ComparisonPage> {
   }
 
   Future<List<int>> _selectionSort(List<int> input) async {
-    List<int> swapCounts = List.filled(input.length, 0); 
-    List<int> originalIndices = List.generate(input.length, (index) => index); 
+    List<int> swapCounts = List.filled(input.length, 0);
+    List<int> originalIndices = List.generate(input.length, (index) => index);
 
     for (int i = 0; i < input.length - 1; i++) {
       int minIndex = i;
@@ -171,21 +169,21 @@ class _ComparisonPageState extends State<ComparisonPage> {
 
     for (int i = 1; i < input.length; i++) {
       int key = input[i];
-      int keyOriginalIndex = originalPositions[i]; 
+      int keyOriginalIndex = originalPositions[i];
       int j = i - 1;
 
       while (j >= 0 && input[j] > key) {
         input[j + 1] = input[j];
-        originalPositions[j + 1] = originalPositions[j]; 
+        originalPositions[j + 1] = originalPositions[j];
 
         swapCounts[originalPositions[j]]++;
-        swapCounts[keyOriginalIndex]++; 
+        swapCounts[keyOriginalIndex]++;
 
         j--;
       }
 
       input[j + 1] = key;
-      originalPositions[j + 1] = keyOriginalIndex; 
+      originalPositions[j + 1] = keyOriginalIndex;
     }
 
     return swapCounts;
@@ -195,141 +193,34 @@ class _ComparisonPageState extends State<ComparisonPage> {
     List<int> swapCounts = List.filled(input.length, 0);
     int n = input.length;
 
-    List<int> originalPositions = List.generate(n, (index) => index); 
+    List<int> originalPositions = List.generate(n, (index) => index);
 
     for (int gap = n ~/ 2; gap > 0; gap ~/= 2) {
       for (int i = gap; i < n; i++) {
         int temp = input[i];
-        int tempOriginalIndex = originalPositions[i]; 
+        int tempOriginalIndex = originalPositions[i];
         int j = i;
 
         while (j >= gap && input[j - gap] > temp) {
           input[j] = input[j - gap];
-          originalPositions[j] = originalPositions[j - gap]; 
+          originalPositions[j] = originalPositions[j - gap];
 
-          swapCounts[originalPositions[j]]++; 
-          swapCounts[tempOriginalIndex]++; 
+          swapCounts[originalPositions[j]]++;
+          swapCounts[tempOriginalIndex]++;
 
           j -= gap;
         }
 
         input[j] = temp;
-        originalPositions[j] = tempOriginalIndex; 
+        originalPositions[j] = tempOriginalIndex;
       }
     }
 
-    return swapCounts;
-  }
-
-  Future<List<int>> _heapSort(List<int> input) async {
-    List<int> swapCounts = List.filled(input.length, 0);
-    List<int> originalPositions = List.generate(input.length, (index) => index);
-    int n = input.length;
-
-    void heapify(int n, int i) {
-      int largest = i;
-      int left = 2 * i + 1;
-      int right = 2 * i + 2;
-
-      if (left < n && input[left] > input[largest]) {
-        largest = left;
-      }
-      if (right < n && input[right] > input[largest]) {
-        largest = right;
-      }
-      if (largest != i) {
-        
-        int temp = input[i];
-        input[i] = input[largest];
-        input[largest] = temp;
-
-        int originalTempPos = originalPositions[i];
-        originalPositions[i] = originalPositions[largest];
-        originalPositions[largest] = originalTempPos;
-
-        swapCounts[originalPositions[i]]++;
-        swapCounts[originalPositions[largest]]++;
-
-        heapify(n, largest);
-      }
-    }
-
-    for (int i = n ~/ 2 - 1; i >= 0; i--) {
-      heapify(n, i);
-    }
-
-    for (int i = n - 1; i > 0; i--) {
-      int temp = input[0];
-      input[0] = input[i];
-      input[i] = temp;
-
-      int originalTempPos = originalPositions[0];
-      originalPositions[0] = originalPositions[i];
-      originalPositions[i] = originalTempPos;
-
-      swapCounts[originalPositions[0]]++;
-      swapCounts[originalPositions[i]]++;
-
-      heapify(i, 0);
-    }
-
-    return swapCounts;
-  }
-
-  Future<List<int>> _quickSort(List<int> input) async {
-    List<int> swapCounts = List.filled(input.length, 0);
-
-    List<int> initialPositions = List.generate(input.length, (index) => index);
-
-    int _partition(List<int> arr, int low, int high) {
-      int pivot = arr[high];
-      int i = (low - 1);
-
-      for (int j = low; j < high; j++) {
-        if (arr[j] < pivot) {
-          i++;
-
-          int tempValue = arr[i];
-          arr[i] = arr[j];
-          arr[j] = tempValue;
-
-          int tempPos = initialPositions[i];
-          initialPositions[i] = initialPositions[j];
-          initialPositions[j] = tempPos;
-
-          swapCounts[initialPositions[i]]++;
-          swapCounts[initialPositions[j]]++;
-        }
-      }
-
-      int tempValue = arr[i + 1];
-      arr[i + 1] = arr[high];
-      arr[high] = tempValue;
-
-      int tempPos = initialPositions[i + 1];
-      initialPositions[i + 1] = initialPositions[high];
-      initialPositions[high] = tempPos;
-
-      swapCounts[initialPositions[i + 1]]++;
-      swapCounts[initialPositions[high]]++;
-
-      return i + 1;
-    }
-
-    void quickSort(List<int> arr, int low, int high) {
-      if (low < high) {
-        int pi = _partition(arr, low, high);
-        quickSort(arr, low, pi - 1);
-        quickSort(arr, pi + 1, high);
-      }
-    }
-
-    quickSort(input, 0, input.length - 1);
     return swapCounts;
   }
 
   double _getMaxSwaps() {
-    if (_sortResults.isEmpty) return 1.0; 
+    if (_sortResults.isEmpty) return 1.0;
 
     int maxSwaps = 0;
     for (var entry in _sortResults.values) {
@@ -371,7 +262,7 @@ class _ComparisonPageState extends State<ComparisonPage> {
                 primaryXAxis: CategoryAxis(
                   title: AxisTitle(text: 'Input Values'),
                   interval: 1,
-                  maximumLabels: widget.numbers.length, 
+                  maximumLabels: widget.numbers.length,
                 ),
                 primaryYAxis: NumericAxis(
                   title: AxisTitle(text: 'Number of Swaps'),
