@@ -69,14 +69,19 @@ class _ComparisonPageState extends State<ComparisonPage> {
 
   Future<void> _binarySearch(
       List<int> arr, int target, List<int> steps, int left, int right) async {
+    // Sort the array if not already sorted
+    List<int> sortedArr = List.from(arr)..sort();
+    left = 0;
+    right = sortedArr.length - 1;
+
     while (left <= right) {
       int mid = left + (right - left) ~/ 2;
       steps[mid]++; // Increment comparison count
       await Future.delayed(Duration(milliseconds: widget.speed.toInt()));
 
-      if (arr[mid] == target) {
+      if (sortedArr[mid] == target) {
         break; // Target found, exit the loop
-      } else if (arr[mid] < target) {
+      } else if (sortedArr[mid] < target) {
         left = mid + 1;
       } else {
         right = mid - 1;
