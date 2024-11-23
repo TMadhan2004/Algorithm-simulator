@@ -264,7 +264,7 @@ class _SearchingPageState extends State<SearchingPage> {
 
 // Loading dialog with video animation
 class LoadingDialog extends StatefulWidget {
-  final VoidCallback onComplete;
+  final Function onComplete;
 
   const LoadingDialog({Key? key, required this.onComplete}) : super(key: key);
 
@@ -284,6 +284,7 @@ class _LoadingDialogState extends State<LoadingDialog> {
           _controller.setLooping(false);
           _controller.play();
         });
+
         Future.delayed(Duration(seconds: 3), () {
           widget.onComplete();
         });
@@ -299,7 +300,10 @@ class _LoadingDialogState extends State<LoadingDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(50.0),
+      ),
+      backgroundColor: Colors.white,
       child: Container(
         width: 200,
         height: 200,
