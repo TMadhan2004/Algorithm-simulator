@@ -72,10 +72,12 @@ class _PrimsPageState extends State<PrimsPage> with SingleTickerProviderStateMix
         minEdge = edge;
         break;
       } else if (_includedVertices.contains(edge.vertex1) && _includedVertices.contains(edge.vertex2)) {
-        setState(() {
-          _cycleEdges.add(edge);
-          _statusMessage = 'Cycle detected with edge (${edge.vertex1}, ${edge.vertex2}). Highlighting in red.';
-        });
+        if (!_cycleEdges.contains(edge) && !_mst.contains(edge)) {
+          setState(() {
+            _cycleEdges.add(edge);
+            _statusMessage = 'Cycle detected with edge (${edge.vertex1}, ${edge.vertex2}). Highlighting in red.';
+          });
+        }
       }
     }
 
@@ -231,10 +233,6 @@ class Edge {
   Edge(this.vertex1, this.vertex2, this.weight);
 }
 
-
-
-
-
 class GraphPainter extends CustomPainter {
   final List<Edge> edges;
   final Set<int> includedVertices;
@@ -252,7 +250,7 @@ class GraphPainter extends CustomPainter {
     required this.currentEdgeIndex,
   });
 
-  @override
+
   @override
   void paint(Canvas canvas, Size size) {
     Paint edgePaint = Paint()..color = Colors.black..strokeWidth = 2;
