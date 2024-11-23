@@ -96,3 +96,4 @@ Done by Madhan-7:
 Updated dijkstra_page.dart code
 Exception cases for input graph are handled.
 Prims fixed but still not stable.
+Update : Prims algorithm is now stable.
