@@ -301,6 +301,7 @@ class _SearchingAnimationPageState extends State<SearchingAnimationPage>
         },
         child: Icon(Icons.arrow_back),
         backgroundColor: Colors.purple,
+        foregroundColor: Colors.white,
       ),
     );
   }
