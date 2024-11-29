@@ -36,7 +36,7 @@ flutter:
 
   assets:
     - assets/titlecard.mov
-    - assets/logo.png
+    - assets/logo.jpeg
     - assets/sort.png
     - assets/search.png
     - assets/graph.png
