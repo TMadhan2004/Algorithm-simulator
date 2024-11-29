@@ -238,6 +238,8 @@ class _ComparisonPageState extends State<ComparisonPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Algorithm Comparison'),
+        backgroundColor: Colors.purple, // Purple AppBar
+        foregroundColor: Colors.white,
       ),
       body: Center(
         child: _sortResults.isEmpty
